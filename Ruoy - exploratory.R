@@ -8,5 +8,10 @@ library(stringr)
 data15$year <- rep(15, length(data15$X))
 data16$year <- rep(16, length(data16$X))
 data17$year <- rep(17, length(data17$X))
-View(data17)
-library(stringr)
+View(data15)
+library(chron)
+test <- times(data15$X5K)
+which(is.na(test))
+test[2328]
+(data15$X5K[which(is.na(test))])
+data15$X10K[which(is.na(test))]
