@@ -1,5 +1,12 @@
-data_2015 <- read.csv2("marathon_results_2015.csv", sep = ",")
-data_2016 <- read.csv2("marathon_results_2016.csv", sep = ",")
-data_2017 <- read.csv2("marathon_results_2017.csv", sep = ",")
+data15 <- read.csv2("marathon_results_2015.csv", sep = ",")
+data16 <- read.csv2("marathon_results_2016.csv", sep = ",")
+data17 <- read.csv2("marathon_results_2017.csv", sep = ",")
 
-
+View(data17)
+class(data17$X5K)
+library(stringr)
+data15$year <- rep(15, length(data15$X))
+data16$year <- rep(16, length(data16$X))
+data17$year <- rep(17, length(data17$X))
+View(data17)
+library(stringr)
