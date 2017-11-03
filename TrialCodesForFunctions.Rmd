@@ -16,6 +16,7 @@ You'll find the list of functions being built here before being transformed to t
 ```{r}
 
 library(dplyr)
+library(data.table)
 data_all <- readRDS("data_all.rds")
 data_all_dup <- data_all
 
@@ -117,9 +118,10 @@ unique(data_all_dup$`Age_Bracket`)
 View(data_all_dup)
 ```
 
-## 1. Age Filter - filter data based on input value of age and its corresponding age bracket
+## 2. Age Filter - filter data based on input value of age and its corresponding age bracket
 ```{r}
 agefilter <- function(age, dataset){ #input value of age, dataset is the data to be filtered
+  dataset <- agebracketcol(dataset)
   agebracket <- age %>% agebracket3()
   dataset <- dataset %>% filter(Age_Bracket == agebracket)
   return(dataset)
@@ -135,7 +137,7 @@ View(data_all_dup_age_29)
 dim(data_all_dup_age_29)
 
 ```
-## 1. Overal demographics filter - filter data based on input value of age, gender & nationality
+## 3. Overal demographics filter - filter data based on input value of age, gender & nationality
 ```{r}
 #function that deals with missing arguments without breaking
 #function broken for unknown reasons, modified below
@@ -216,6 +218,7 @@ demographics_filter4 <- function(dataset, age=NULL, gender=NULL, nationality=NUL
   )
 }
 
+#Success!
 demographics_filter5 <- function(dataset, age, gender, nationality){ #demographic data, dataset = raw data
   if(missing(age)) {
     
@@ -238,22 +241,22 @@ demographics_filter5 <- function(dataset, age, gender, nationality){ #demographi
     
   } else if(missing(gender)){
     if(missing(nationality)){
-      dataset %>% filter(Age == age)      
+      agefilter(age, dataset) 
     }
     else{
-      dataset %>% filter(Age == age, Country == nationality)
+      agefilter(age,dataset) %>% filter(Country == nationality)
     }
   } else if(missing(nationality)){
-    dataset %>% filter(Age == age, M.F == gender)
+    agefilter(age,dataset) %>% filter(Age == age, M.F == gender)
   }
   else{
-    dataset %>% filter(Age == age, Country == nationality, M.F == gender)
+    agefilter(age, dataset) %>% filter(Age == age, Country == nationality, M.F == gender)
   }
 }
 
 
 
-data_all_dup <- demographics_filter5(data_all, age=28, gender="M")
+data_all_dup <- demographics_filter5(data_all, age=28, gender="M", nationality = "USA")
 test <- demographics_filter2(data_all, age = 2, gender = 1, nationality = 1)
 test
 nationality <- "USA"
@@ -265,7 +268,67 @@ dataset <- data_all_dup
 data_all_dup <- data_all %>% filter()
 dim(data_all_dup)
 dim(data_all)
-data_all_dup <- data_all %>% filter(Age == age, M.F == gender)
+data_all_dup <- data_all %>% filter(Age == age, M.F == gender, Country == nationality)
 View(data_all_dup)
 
+```
+## 4. Top 10%, Bottom 20%, Global Average - Top 10%
+```{r}
+#function that only returns the top 10% data points
+top10percent <- function(dataset){
+  dataset %>% arrange(Official.Time.1) %>% head(round(length(dataset$Official.Time.1)*0.1))
+  
+}
+#testing
+data_all_dup_top10 <- top10percent(data_all_dup)
+dim(data_all_dup)
+dim(data_all_dup_top10)
+
+#function to return a data frame that is plottable using ggplot2
+top10percentmean <- function(dataset){
+  top10 <- dataset %>% arrange(Official.Time.1) %>% head(round(length(dataset$Official.Time.1)*0.1)) %>% mutate(X0K.1 = rep(0)) %>% select("X0K.1", c(13:22)) %>% lapply(mean) %>% as.data.frame() %>% `row.names<-`(c("time")) %>% t() %>% as.data.frame() %>%  setDT(keep.rownames=TRUE) %>% mutate(Label = rep("Top10"))
+  top10$rn <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
+  colnames(top10)[1]<-("milestone(km)")
+  return(top10)
+}  
+test <- top10percentmean(data_all_dup)
+test
+```
+## 5. Top 10%, Bottom 20%, Global Average - Bottom 10%
+```{r}
+#function to only extract the bottom 20% - no average is calculated
+bottom20percent <- function(dataset){
+  dataset %>% arrange(desc(Official.Time.1)) %>% head(round(length(dataset$Official.Time.1)*0.2))
+  
+}
+data_all_dup_bottom20 <- bottom20percent(data_all_dup)
+dim(data_all_dup)
+dim(data_all_dup_bottom20)
+
+names(data_all_dup)
+test <- data_all_dup_bottom20[,c(13:22)] %>% lapply(mean)
+View(test)
+
+#function to return a data frame that is plottable using ggplot2
+bottom20percentmean <- function(dataset){
+  bottom20 <- dataset %>% arrange(desc(Official.Time.1)) %>% head(round(length(dataset$Official.Time.1)*0.2)) %>% mutate(X0K.1 = rep(0)) %>% select("X0K.1", c(13:22)) %>% lapply(mean) %>% as.data.frame() %>% `row.names<-`(c("time")) %>% t() %>% as.data.frame() %>%  setDT(keep.rownames=TRUE) %>% mutate(Label = rep("Bottom20"))
+  bottom20$rn <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
+  colnames(bottom20)[1]<-("milestone(km)")
+  return(bottom20)
+}  
+
+test <- bottom20percentmean(data_all_dup)
+test
+```
+
+## 6. Top 10%, Bottom 20%, Global Average - Global Average
+```{r}
+globalaverage <- function(dataset){
+  global <- dataset %>% mutate(X0K.1 = rep(0)) %>% select("X0K.1", c(13:22)) %>% lapply(mean) %>% as.data.frame() %>% `row.names<-`(c("time")) %>% t() %>% as.data.frame() %>%  setDT(keep.rownames=TRUE) %>% mutate(Label = rep("Global"))
+  global$rn <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
+  colnames(global)[1]<-("milestone(km)")
+  return(global)
+}
+test <- globalaverage(data_all_dup)
+test
 ```
