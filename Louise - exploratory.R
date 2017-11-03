@@ -12,8 +12,8 @@ q1_2015 <- quantile(d2015$Age, 0.25)
 q2_2015 <- quantile(d2015$Age, 0.5)
 q3_2015 <- quantile(d2015$Age, 0.75)
 
-youngest_2015 <- d2015 %>% filter(Age <= q1_2016) 
-younger_2015 <- d2015 %>% filter(Age <= q1_2016) 
+youngest_2015 <- d2015 %>% filter(Age <= 33) 
+younger_2015 <- d2015 %>% filter(Age <= 33) 
 
 #2016 
 summary(d2016)
