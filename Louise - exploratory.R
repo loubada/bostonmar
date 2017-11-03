@@ -46,3 +46,10 @@ dim(d2017 %>% filter(Country == "FRA"))
 
 ggplot(data = all,
        aes(x = Age)) + geom_bar()
+
+mean(all$Age)
+median(all$Age)
+
+countries_mix <- c(levels(d2015$Country), levels(d2016$Country), levels(d2017$Country))
+countries_u <- unique(countries_mix)
+class(levels(d2015$Country))
