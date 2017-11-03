@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 You'll find the list of functions being built here before being transformed to the proper package files
 
 
-## 1. Age Filter
+## 1. Age Bracket Column Creation
 ```{r}
 
 library(dplyr)
@@ -21,6 +21,8 @@ data_all_dup <- data_all
 
 View(data_all)
 
+
+#inefficient code, also if statements do not support vectorized input hence need for lapply, no optimised
 agebracket <- function(X){
   if (X < 20){
     Y <- "<20"
@@ -63,6 +65,7 @@ agebracket <- function(X){
  print(return(Y))
 }
 
+#inefficient code
 agebracket2 <- function(age){
   ifelse (age < 20, Y <- "<20",
     ifelse (age < 25, Y <- "20 - 24",
@@ -77,6 +80,7 @@ agebracket2 <- function(age){
  print(return(Y))
 }
 
+#function to create age brackets based on input value of age
 agebracket3 <- function(age){
   ifelse (age < 20, "<20",
     ifelse (age < 25, "20 - 24",
@@ -88,26 +92,48 @@ agebracket3 <- function(age){
                 ifelse (age < 55, "50 - 54",
                   ifelse (age < 60, "55 - 59", "> 60")))))))))
 }
+#testing
 agebracket2(22)
 agebracket(55)
 a <- agebracket3(98)
 a
-
 A <- c(1, 50, 23)
-B <- lapply(A, agebracket3())
-B
-
-class(data_all["Age"])
-
-data_all[20,"Age"] %>% agebracket2()
+B <- lapply(A, agebracket3)
+C <- agebracket3(A)
+is.vector(C)
 
 
+
+
+#Function to create a new column
 agebracketcol <- function(X){
-  X["Age Bracket"] <- lapply(as.list(X["Age"]), FUN = agebracket2)
+  X["Age_Bracket"] <- X["Age"] %>% agebracket3() %>% as.vector()
   return(X)
 }
 
+#testing on duplicated dataset
 data_all_dup <- data_all_dup %>% agebracketcol()
+unique(data_all_dup$`Age_Bracket`)
 View(data_all_dup)
 ```
 
+## 1. Age Filter - filter data based on input value of age and its corresponding age bracket
+```{r}
+agefilter <- function(age, dataset){ #input value of age, dataset is the data to be filtered
+  agebracket <- age %>% agebracket3()
+  dataset <- dataset %>% filter(Age_Bracket == agebracket)
+  return(dataset)
+}
+#mannual testing
+ageb <- (29 %>% agebracket3())
+data_all_dup_age_29 <- data_all_dup %>% filter(Age_Bracket==ageb)
+
+#testing the function
+data_all_dup_age_29 <- agefilter(29, data_all_dup)
+unique(data_all_dup_age_29$Age_Bracket)
+View(data_all_dup_age_29)
+dim(data_all_dup_age_29)
+
+
+
+```
