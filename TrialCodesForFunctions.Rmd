@@ -286,15 +286,15 @@ dim(data_all_dup_top10)
 
 #function to return a data frame that is plottable using ggplot2
 top10percentmean <- function(dataset){
-  top10 <- dataset %>% arrange(Official.Time.1) %>% head(round(length(dataset$Official.Time.1)*0.1)) %>% mutate(X0K.1 = rep(0)) %>% select("X0K.1", c(13:22)) %>% lapply(mean) %>% as.data.frame() %>% `row.names<-`(c("time")) %>% t() %>% as.data.frame() %>%  setDT(keep.rownames=TRUE) %>% mutate(Label = rep("Top10"))
-  top10$rn <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
+  top10 <- dataset %>% arrange(Official.Time.1) %>% head(round(length(dataset$Official.Time.1)*0.1)) %>% mutate(X0K.1 = rep(0)) %>% select("X0K.1", c(13:22)) %>% lapply(mean) %>% as.data.frame() %>% `row.names<-`(c("mean time")) %>% t() %>% as.data.frame() %>%  setDT(keep.rownames=TRUE) %>% mutate(Label = rep("Top10"))
+  top10$rn <- c(0, 5, 10, 15, 20, 21.10, 25, 30, 35, 40, 42.20)
   colnames(top10)[1]<-("milestone(km)")
   return(top10)
 }  
 test <- top10percentmean(data_all_dup)
 test
 ```
-## 5. Top 10%, Bottom 20%, Global Average - Bottom 10%
+## 5. Top 10%, Bottom 20%, Global Average - Bottom 20%
 ```{r}
 #function to only extract the bottom 20% - no average is calculated
 bottom20percent <- function(dataset){
@@ -311,9 +311,9 @@ View(test)
 
 #function to return a data frame that is plottable using ggplot2
 bottom20percentmean <- function(dataset){
-  bottom20 <- dataset %>% arrange(desc(Official.Time.1)) %>% head(round(length(dataset$Official.Time.1)*0.2)) %>% mutate(X0K.1 = rep(0)) %>% select("X0K.1", c(13:22)) %>% lapply(mean) %>% as.data.frame() %>% `row.names<-`(c("time")) %>% t() %>% as.data.frame() %>%  setDT(keep.rownames=TRUE) %>% mutate(Label = rep("Bottom20"))
-  bottom20$rn <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
-  colnames(bottom20)[1]<-("milestone(km)")
+  bottom20 <- dataset %>% arrange(desc(Official.Time.1)) %>% head(round(length(dataset$Official.Time.1)*0.2)) %>% mutate(X0K.1 = rep(0)) %>% select("X0K.1", c(13:22)) %>% lapply(mean) %>% as.data.frame() %>% `row.names<-`(c("mean_time")) %>% t() %>% as.data.frame() %>%  setDT(keep.rownames=TRUE) %>% mutate(Label = rep("Bottom20"))
+  bottom20$rn <- c(0, 5, 10, 15, 20, 21.10, 25, 30, 35, 40, 42.20)
+  colnames(bottom20)[1]<-("milestone_km")
   return(bottom20)
 }  
 
@@ -324,11 +324,52 @@ test
 ## 6. Top 10%, Bottom 20%, Global Average - Global Average
 ```{r}
 globalaverage <- function(dataset){
-  global <- dataset %>% mutate(X0K.1 = rep(0)) %>% select("X0K.1", c(13:22)) %>% lapply(mean) %>% as.data.frame() %>% `row.names<-`(c("time")) %>% t() %>% as.data.frame() %>%  setDT(keep.rownames=TRUE) %>% mutate(Label = rep("Global"))
-  global$rn <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
-  colnames(global)[1]<-("milestone(km)")
+  global <- dataset %>% mutate(X0K.1 = rep(0)) %>% select("X0K.1", c(13:22)) %>% lapply(mean) %>% as.data.frame() %>% `row.names<-`(c("mean_time")) %>% t() %>% as.data.frame() %>%  setDT(keep.rownames=TRUE) %>% mutate(Label = rep("Global"))
+  global$rn <- c(0, 5, 10, 15, 20, 21.10, 25, 30, 35, 40, 42.20)
+  colnames(global)[1]<-("milestone_km")
   return(global)
 }
 test <- globalaverage(data_all_dup)
 test
+```
+## 6. past time
+```{r}
+pasttime <- function(pasttime, dataset){
+  past_time <- dataset %>% filter(Official.Time.1 > pasttime-7.5 & Official.Time.1 < pasttime+7.5) %>% mutate(X0K.1 = rep(0)) %>% select("X0K.1", c(13:22)) %>% lapply(mean) %>% as.data.frame() %>% `row.names<-`(c("mean_time")) %>% t() %>% as.data.frame() %>% setDT(keep.rownames=TRUE) %>% mutate(Label = rep("past_time"))
+  past_time$rn <- c(0, 5, 10, 15, 20, 21.10, 25, 30, 35, 40, 42.20)
+  colnames(past_time)[1]<-("milestone_km")
+  return(past_time)
+}
+test <- pasttime(200, data_all_dup)
+test
+
+past <- 200
+past_test <- data_all_dup %>% filter(Official.Time.1 > past-7.5 & Official.Time.1 < past+7.5) %>% mutate(X0K.1 = rep(0)) %>% select("X0K.1", c(13:22)) %>% lapply(mean)
+finalmean <- mean(past_test$Official.Time.1)
+finalmean
+View(past_test)
+```
+## 7. Goal time
+```{r}
+goaltime <- function(goaltime, dataset){
+  goal_time_1 <- dataset %>% filter(Official.Time.1 > goaltime-30 & Official.Time.1 < goaltime-15) %>% mutate(X0K.1 = rep(0)) %>% select("X0K.1", c(13:22)) %>% lapply(mean) %>% as.data.frame() %>% `row.names<-`(c("mean_time")) %>% t() %>% as.data.frame() %>% setDT(keep.rownames=TRUE) %>% mutate(Label = rep("Goal_time_15to30_mins_Faster"))
+  goal_time_1$rn <- c(0, 5, 10, 15, 20, 21.10, 25, 30, 35, 40, 42.20)
+  colnames(goal_time_1)[1]<-("milestone_km")
+  
+  goal_time_2 <- dataset %>% filter(Official.Time.1 > goaltime-15 & Official.Time.1 < goaltime) %>% mutate(X0K.1 = rep(0)) %>% select("X0K.1", c(13:22)) %>% lapply(mean) %>% as.data.frame() %>% `row.names<-`(c("mean_time")) %>% t() %>% as.data.frame() %>% setDT(keep.rownames=TRUE) %>% mutate(Label = rep("Goal_time_0to15_mins_Faster"))
+  goal_time_2$rn <- c(0, 5, 10, 15, 20, 21.10, 25, 30, 35, 40, 42.20)
+  colnames(goal_time_2)[1]<-("milestone_km")
+  
+  goal_time_3 <- dataset %>% filter(Official.Time.1 > goaltime & Official.Time.1 < goaltime+15) %>% mutate(X0K.1 = rep(0)) %>% select("X0K.1", c(13:22)) %>% lapply(mean) %>% as.data.frame() %>% `row.names<-`(c("mean_time")) %>% t() %>% as.data.frame() %>% setDT(keep.rownames=TRUE) %>% mutate(Label = rep("Goal_time_0to15_mins_Slower"))
+  goal_time_3$rn <- c(0, 5, 10, 15, 20, 21.10, 25, 30, 35, 40, 42.20)
+  colnames(goal_time_3)[1]<-("milestone_km")
+  
+  goal_time <- rbind(goal_time_1, goal_time_2, goal_time_3)
+  
+  return(goal_time)
+}
+test <- goaltime(200, data_all_dup)
+test
+
+test %>% ggplot(aes(x=milestone_km, y=mean_time, col=Label))+geom_point()+geom_line()
 ```
