@@ -1,0 +1,23 @@
+---
+title: "FunctionTrialCodes"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Trial Codes For Functions To Test if They Work
+
+You'll find the list of functions being built here before being transformed to the proper package files
+
+
+## 1. Age Filter
+```{r}
+data_all <- readRDS("data_all.rds")
+View(data_all)
+agefilter <- function(X){
+  
+}
+```
+

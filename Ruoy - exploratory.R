@@ -105,25 +105,74 @@ library(dplyr)
 data15_1_Dup <- data15_1
 data15_1_Dup["Freq"] <- rep(1) 
 
-Country_15 <- table(unlist(as.data.frame(data15_1$Country))
+Country_15 <-arrange(as.data.frame(table(unlist(data15_1$Country))), desc(Freq))
+Country_15 <- as.vector(Country_15)
 
-if_in_top10 <- function(X){
-  if (X %in% Country_15 == TRUE){
-    X <-  X
-  }else{
-    X <-  "Other"
-  }
-}
+Country_15_List <- Country_15[, 1]
+Country_15_top10 <- as.vector(Country_15_List[1:10])
+is.vector(Country_15_top10)
+
+Country_15_top10
+
+# the below function did not work with the specific data structure
+#if_in_top10 <- function(X){
+#  if (X %in% Country_15_top10 == TRUE){
+#    X = as.character(X)
+#  }else{
+#    X = "Other"
+#  }
+#  return(X)
+#}
+
+#the below function is too inefficient
+#if_in_top_10_iteractive <- function(X){
+#  for (i in 1:length(data15_1$Country)){
+#    if (X[i] %in% Country_15_top10== TRUE) { 
+#      X[i] = X[i]
+#    }
+#    else{
+#      X[i] = "Other"
+#    }
+#  }
+#}
 
 
-Simplified_Country_List_15 <- apply(as.data.frame(data15_1$Country), 1, if_in_top10(X))
+summary(data15_1)
+data15_1$Country[7] %in% Country_15_top10
+index_country_15 <- which(!data15_1_Dup$Country %in% Country_15_top10 == TRUE)
+data15_1_Dup$Country <- as.character(data15_1_Dup$Country)
+data15_1_Dup$Country[index_country_15] <- "Others" 
+unique(data15_1_Dup$Country)
+data15_1_Dup$Country_S <- NULL
+data15_1_Dup$Country <- factor(data15_1_Dup$Country)
+is.factor(data15_1_Dup$Country)
+View(data15_1_Dup)
+
+
+model.lm.country <- lm(Official.Time.1 ~ Country, data = data15_1_Dup)
+summary(model.lm.country)
+
+model.lm.city <- lm(Official.Time.1 ~ City, data = data15_1_Dup)
+summary(model.lm.city)
+
+class(data15_1_Dup$Age)
+model.lm.age <- lm(Official.Time.1 ~ Age, data = data15_1_Dup)
+summary(model.lm.age)
+
+model.lm.gender <- lm(Official.Time.1 ~ M.F, data = data15_1_Dup)
+summary(model.lm.gender)
+
+typeof(data15_1$Official.Time)
+mean_gender_final_time_F <- data15_1 %>% filter(M.F == "F")
+mean(mean_gender_final_time_F$Official.Time.1)
+var(mean_gender_final_time_F$Official.Time.1)
+
+mean_gender_final_time_M <- data15_1 %>% filter(M.F == "M")
+mean(mean_gender_final_time_M$Official.Time.1)
+var(mean_gender_final_time_M$Official.Time.1)
 
 
 
-
-
-model.lm <- lm(Official.Time.1 ~ Country, data = data15_1)
-summary(model.lm)
 
 library(FactoMineR)
 PCA_15 <- PCA(data15_1[ ,c(27:36)])
@@ -151,5 +200,5 @@ library(ggplot2)
 ggplot(ClusterMean_15_1_melted, aes(rn, value, col = variable, group = variable)) + geom_point() + geom_line()
 ggplot(ClusterMean_15_1_melted, aes(rn, value, col = variable, group = variable)) + geom_point() + stat_smooth()
 
-
+data15_1 %>% ggplot(aes(x = Age)) + geom_bar()
 
