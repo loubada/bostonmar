@@ -1,2 +1,0 @@
-# FunctionsForTeamCyCy
-# FunctionsForTeamCyCy
