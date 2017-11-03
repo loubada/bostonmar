@@ -16,8 +16,21 @@ ui <- fluidPage( theme = shinytheme('darkly'),
                    choices = list("Male" = 1, "Female" = 2, "N/A" = 3), 
                    selected = 3),
       selectInput("country", label = h3("Country :"), 
-                  choices = c("-", countries_u), 
+                  choices = c("-", "hi"), 
                   selected = NULL),
+      
+      tags$div( class="btn-group", role="group", 'aria-label' ="Button group with nested dropdown", 
+        tags$button( type="button", class="btn btn-primary", color="Primary"),
+        tags$div( class="btn-group", role="group"),
+        tags$button( id="btnGroupDrop1", type="button", 
+                     class="btn btn-primary dropdown-toggle", 'data-toggle'="dropdown", 
+                     'aria-haspopup'="true", 'aria-expanded'="false"),
+        tags$div( class="dropdown-menu", 'aria-labelledby'="btnGroupDrop1", 
+                  'x-placement'="bottom-start", 
+                  style="position: absolute; transform: translate3d(0px, 36px, 0px); top: 0px; left: 0px; will-change: transform;"),
+        tags$a( class="dropdown-item", href="#", "Dropdown link")
+        ),
+      
       tags$div( class="btn-group open",
         tags$a( href="#", class="btn btn-default"),
         tags$a( href="#", class="btn btn-default dropdown-toggle", 'data-toggle' ="dropdown", 'aria-expanded' ="true", tags$span( class="caret")),
@@ -29,6 +42,7 @@ ui <- fluidPage( theme = shinytheme('darkly'),
        # <li class="divider"></li>
         #<li><a href="#">Separated link</a></li>
         )
+      
     ),
     
     mainPanel(
