@@ -1,0 +1,113 @@
+---
+title: "FunctionTrialCodes"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Trial Codes For Functions To Test if They Work
+
+You'll find the list of functions being built here before being transformed to the proper package files
+
+
+## 1. Age Filter
+```{r}
+
+library(dplyr)
+data_all <- readRDS("data_all.rds")
+data_all_dup <- data_all
+
+View(data_all)
+
+agebracket <- function(X){
+  if (X < 20){
+    Y <- "<20"
+  } else
+    if (20 <= X & X < 25){
+      Y <- "20 - 24"
+    }
+    else
+    if (25 <= X & X < 30){
+      Y <- "25 - 29"
+    }
+    else
+    if (30 <= X & X < 35){
+      Y <- "30 - 34"
+    }
+    else
+    if (35 <= X & X < 40){
+      Y <- "35 - 39"
+    }
+    else
+    if (40 <= X & X < 45){
+      Y <- "40 - 44"
+    }
+    else
+    if (45 <= X & X < 50){
+      Y <- "45 - 49"
+    }
+    else
+    if (50 <= X & X < 55){
+      Y <- "50 - 54"
+    }
+    else
+    if (55 <= X & X < 60){
+      Y <- "55 - 59"
+    }
+    else
+    if ( X > 60){
+      Y <- "> 60"
+    }
+ print(return(Y))
+}
+
+agebracket2 <- function(age){
+  ifelse (age < 20, Y <- "<20",
+    ifelse (age < 25, Y <- "20 - 24",
+      ifelse (age < 30, Y <- "25 - 29",
+        ifelse (age < 35, Y <- "30 - 34",
+          ifelse (age < 40, Y <- "35 - 39",
+            ifelse (age < 45, Y <- "40 - 44",
+              ifelse (age < 50, Y <- "45 - 49",
+                ifelse (age < 55, Y <- "50 - 54",
+                  ifelse (age < 60, Y <- "55 - 59", Y <- "> 60")))))))))
+                          
+ print(return(Y))
+}
+
+agebracket3 <- function(age){
+  ifelse (age < 20, "<20",
+    ifelse (age < 25, "20 - 24",
+      ifelse (age < 30, "25 - 29",
+        ifelse (age < 35, "30 - 34",
+          ifelse (age < 40, "35 - 39",
+            ifelse (age < 45, "40 - 44",
+              ifelse (age < 50, "45 - 49",
+                ifelse (age < 55, "50 - 54",
+                  ifelse (age < 60, "55 - 59", "> 60")))))))))
+}
+agebracket2(22)
+agebracket(55)
+a <- agebracket3(98)
+a
+
+A <- c(1, 50, 23)
+B <- lapply(A, agebracket3())
+B
+
+class(data_all["Age"])
+
+data_all[20,"Age"] %>% agebracket2()
+
+
+agebracketcol <- function(X){
+  X["Age Bracket"] <- lapply(as.list(X["Age"]), FUN = agebracket2)
+  return(X)
+}
+
+data_all_dup <- data_all_dup %>% agebracketcol()
+View(data_all_dup)
+```
+
