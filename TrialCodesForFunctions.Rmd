@@ -134,6 +134,138 @@ unique(data_all_dup_age_29$Age_Bracket)
 View(data_all_dup_age_29)
 dim(data_all_dup_age_29)
 
+```
+## 1. Overal demographics filter - filter data based on input value of age, gender & nationality
+```{r}
+#function that deals with missing arguments without breaking
+#function broken for unknown reasons, modified below
+demographics_filter <- function(dataset, age, gender, nationality){ #demographic data, dataset = raw data
+  ifelse(missing(age), 
+         ifelse(missing(gender),
+                ifelse(missing(nationality),
+                       dataset,
+                       dataset %>% filter(Country == nationality)),
+                ifelse(missing(nationality),
+                       dataset %>% filter(M.F == gender),
+                       dataset %>% filter(Country == nationality, M.F == gender))),
+         
+         ifelse(missing(gender),
+                ifelse(missing(nationality),
+                       dataset %>% filter(Age == age),
+                       dataset %>% filter(Age == age, Country == nationality)),
+                ifelse(missing(nationality),
+                       dataset %>% filter(Age == age, M.F == gender),
+                       dataset %>% filter(Age == age, Country == nationality, M.F == gender)))
+  )
+}
+#verified that the ifelse+missing nesting works as expected, not sure why the filter function is not working properly from above
+demographics_filter2 <- function(dataset, age, gender, nationality){ #demographic data, dataset = raw data
+  ifelse(missing(age), 
+         ifelse(missing(gender),
+                ifelse(missing(nationality),
+                       1,
+                       2),
+                ifelse(missing(nationality),
+                       3,
+                      4)),
+         
+         ifelse(missing(gender),
+                ifelse(missing(nationality),
+                       5,
+                       6),
+                ifelse(missing(nationality),
+                       7,
+                       8))
+  )
+}
+#function still not working, wanna die
+demographics_filter3 <- function(dataset, age=NULL, gender=NULL, nationality=NULL){ #demographic data, dataset = raw data
+  case_when(
+      !age==NULL & !gender == NULL & !nationality==NULL ~ dataset,
+      
+       age==NULL & !gender == NULL & !nationality==NULL ~ dataset %>% filter(Age == age),
+       age==NULL &  gender == NULL & !nationality==NULL ~ dataset %>% filter(Age == age, M.F == gender),
+       age==NULL &  gender == NULL &  nationality==NULL ~ dataset %>% filter(Age == age, M.F == gender, Country == nationality),
+       age==NULL & !gender == NULL &  nationality==NULL ~ dataset %>% filter(Age == age, Country == nationality),
+       
+      !age==NULL &  gender == NULL & !nationality==NULL ~ dataset %>% filter(M.F == gender),
+      !age==NULL &  gender == NULL &  nationality==NULL ~ dataset %>% filter(M.F == gender, Country == nationality),
+       
+      !age==NULL & !gender == NULL &  nationality==NULL ~ dataset %>% filter(Country == nationality)
+       
+    )
+}
 
+demographics_filter4 <- function(dataset, age=NULL, gender=NULL, nationality=NULL){ #demographic data, dataset = raw data
+  ifelse(is.null(age), 
+         ifelse(is.null(gender),
+                ifelse(is.null(nationality),
+                       dataset,
+                       dataset %>% filter(Country == nationality)),
+                ifelse(is.null(nationality),
+                       dataset %>% filter(M.F == gender),
+                       dataset %>% filter(Country == nationality, M.F == gender))),
+         
+         ifelse(is.null(gender),
+                ifelse(is.null(nationality),
+                       dataset %>% filter(Age == age),
+                       dataset %>% filter(Age == age, Country == nationality)),
+                ifelse(is.null(nationality),
+                       dataset %>% filter(Age == age, M.F == gender),
+                       dataset %>% filter(Age == age, Country == nationality, M.F == gender)))
+  )
+}
+
+demographics_filter5 <- function(dataset, age, gender, nationality){ #demographic data, dataset = raw data
+  if(missing(age)) {
+    
+    if(missing(gender)){
+      if(missing(nationality)){
+        dataset
+      }
+      else{
+        dataset %>% filter(Country == nationality)
+      }
+    } else if(missing(nationality)){
+      dataset %>% filter(M.F == gender)
+    }
+    else {
+      dataset %>% filter(Country == nationality, M.F == gender)
+    }
+    
+    
+    
+    
+  } else if(missing(gender)){
+    if(missing(nationality)){
+      dataset %>% filter(Age == age)      
+    }
+    else{
+      dataset %>% filter(Age == age, Country == nationality)
+    }
+  } else if(missing(nationality)){
+    dataset %>% filter(Age == age, M.F == gender)
+  }
+  else{
+    dataset %>% filter(Age == age, Country == nationality, M.F == gender)
+  }
+}
+
+
+
+data_all_dup <- demographics_filter5(data_all, age=28, gender="M")
+test <- demographics_filter2(data_all, age = 2, gender = 1, nationality = 1)
+test
+nationality <- "USA"
+age = 25
+gender = "M"
+dataset <- data_all_dup
+
+
+data_all_dup <- data_all %>% filter()
+dim(data_all_dup)
+dim(data_all)
+data_all_dup <- data_all %>% filter(Age == age, M.F == gender)
+View(data_all_dup)
 
 ```
