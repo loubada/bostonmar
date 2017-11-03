@@ -19,25 +19,27 @@ ui <- fluidPage( theme = shinytheme('darkly'),
     
     sidebarPanel(
       h4("Demographics :"),
-      numericInput("age", label = h5("Age : "), value = 42),
-      radioButtons("gender", label = h5("Gender : "),
+      numericInput(inputId = "age", label = h5("Age : "), value = 42),
+      radioButtons(inputId = "gender", label = h5("Gender : "),
                    choices = list("Male" = 1, "Female" = 2, "Don't care!" = 3), 
                    selected = 3),
-      selectInput("country", label = h5("Country :"), 
+      selectInput(inputId = "country", label = h5("Country :"), 
                   choices = c("-", countries_u), 
                   selected = NULL),
       
       hr(),
       
       h4("Your times (min) :"),
-      sliderInput("pastT", label = h5("Past Time : "), min = 120, 
+      sliderInput(inputId = "pastT", label = h5("Past Time : "), min = 120, 
                   max = 520, value = 0),
-      sliderInput("goalT", label = h5("Goal Time : "), min = 120, 
+      sliderInput(inputId = "goalT", label = h5("Goal Time : "), min = 120, 
                   max = 520, value = 0),
       
       hr(),
       
-      actionButton("lucky", label = "Feeling lucky?")
+      actionButton(inputId = "lucky", label = "Feeling lucky?"),
+      br(),
+      h6(textOutput("go"))
 
       
     ),
@@ -49,7 +51,7 @@ ui <- fluidPage( theme = shinytheme('darkly'),
         tabPanel("Yes I am!", 
                  br(),
                  br(),
-                 TextOutput("fun"))
+                 textOutput("fun"))
       )
     )
   )
@@ -67,6 +69,8 @@ server <- function(input, output) {
      # input$gender 
      # input$country
      # input$age
+     # input$pastT
+     # input$goalT
     
    })
    
@@ -75,14 +79,20 @@ server <- function(input, output) {
      # input$gender 
      # input$country
      # input$age
+     # input$pastT
+     # input$goalT
      
    })
    
-   output$fun <- renderPrint(
-     {
-       cat("In 2017, an 84 runner participated to the race! She also crossed the finished line in 2015 and 2016!")
-       }
-)
+   output$fun <- renderPrint({
+     x <- cat("In 2017, an 84 year old runner participated in the race! She also crossed the finished line in 2015 and 2016!")
+   })
+   observeEvent(input$lucky, {
+     output$go <- renderPrint({
+       cat("Go to the 3rd tab!")
+     })
+   })
+   
    
    
 }
