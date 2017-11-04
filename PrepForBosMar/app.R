@@ -20,21 +20,21 @@ ui <- fluidPage( theme = shinytheme('darkly'),
     
     sidebarPanel(
       h4("Demographics :"),
-      numericInput(inputId = "age", label = h5("Age : "), value = 42),
-      radioButtons(inputId = "gender", label = h5("Gender : "),
-                   choices = list("Male" = 1, "Female" = 2, "Don't care!" = 3), 
-                   selected = 3, inline = TRUE),
-      selectInput(inputId = "country", label = h5("Country :"), 
+      numericInput(inputId = "Age", label = h5("Age : "), value = 42),
+      radioButtons(inputId = "Gender", label = h5("Gender : "),
+                   choices = list("M" = 1, "F" = 2, "Don't care!" = 3), 
+                   selected = 1, inline = TRUE),
+      selectInput(inputId = "Country", label = h5("Country :"), 
                   choices = c("-", countries_u), 
-                  selected = NULL),
+                  selected = "USA"),
       
       hr(),
       
       h4("Your times (min) :"),
       sliderInput(inputId = "pastT", label = h5("Past Time : "), min = 120, 
-                  max = 520, value = 0),
+                  max = 520, value = 240),
       sliderInput(inputId = "goalT", label = h5("Goal Time : "), min = 120, 
-                  max = 520, value = 0),
+                  max = 520, value = 210),
       
       hr(),
       
@@ -69,28 +69,30 @@ ui <- fluidPage( theme = shinytheme('darkly'),
      
 
 server <- function(input, output) {
-   #Issue: not plotting the graph! Maybe the renderPlot function only works with plot functions and not ggplot functions
-   output$av_plot <- renderPlot({
-     data_to_plot <- demographics_filter(data_all, age = input$age, gender = input$gender, nationality = input$country)
+   #Issue: not plotting the graph! It does plot though if we give specific values, maybe an issue with the inputs
+   
+  inputs <- reactive(input$Age, input$Gender, input$Country)
+    
+  output$av_plot <- renderPlot({
+     as.numeric(input$Age)
+     as.character(input$Gender)
+     as.character(input$Country)
+     
+     data_to_plot <- demographics_filter(data_all, inputs)
      
      data_to_plot <- rbind(pasttime(input$pastT, data_to_plot), goaltime(input$goalT, data_to_plot),
                            top10percentmean(data_to_plot),bottom20percentmean(data_to_plot))
      
-    ggplot(data = (data_to_plot),
+    ggplot(data = data_to_plot,
                  aes(x = milestone_km, y = mean_time, color = Label)) +
        geom_point() +
        geom_smooth() +
        labs(x = "Distance run", y = "Time since departure")
+
    })
    
    output$av_table <- renderDataTable({
-     # input$age
-     # input$gender 
-     # input$country
-     # input$age
-     # input$pastT
-     # input$goalT
-     
+      
    })
    
    output$fun <- renderPrint({
