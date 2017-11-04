@@ -114,7 +114,7 @@ library (CyCyFns)
 
 data_to_plot <- demographics_filter(data_all, age = 42, gender = "M", nationality = "USA")
 
-data_to_plot <- rbind(pasttime(240, data_to_plot),
+data_to_plot <- rbind(pasttime(240, data_to_plot), goaltime(210, data_to_plot),
                       top10percentmean(data_to_plot),bottom20percentmean(data_to_plot))
 
 p <- ggplot(data = (data_to_plot),
