@@ -96,6 +96,8 @@ server <- function(input, output) {
      output$go <- renderPrint({
        cat("Go to the 3rd tab!")
      })
+     # still figuring out how to add sound
+     tags$audio(src = "Yippy.mp3", type = "audio/mp3", autoplay = NA, controls = NA)
    })
    
    
