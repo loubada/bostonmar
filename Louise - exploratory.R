@@ -53,3 +53,93 @@ median(all$Age)
 countries_mix <- c(levels(d2015$Country), levels(d2016$Country), levels(d2017$Country))
 countries_u <- unique(countries_mix)
 class(levels(d2015$Country))
+
+devtools::install_github("ruoyzhang/FunctionsForCyCy")
+
+server <- function(input, output) {
+  
+  #################################
+  if (input$Gender == "Don't care!"){   
+    
+    output$av_plot <- renderPlot({
+      
+      
+      data_to_plot <- demographics_filter(data = data_all, age = input$Age, nationality = input$Country)
+      
+      data_to_plot <- rbind(pasttime(input$pastT, data_to_plot), goaltime(input$goalT, data_to_plot),
+                            top10percentmean(data_to_plot),bottom20percentmean(data_to_plot))
+      
+      ggplot(data = data_to_plot,
+             aes(x = milestone_km, y = mean_time, color = Label)) +
+        geom_point() +
+        geom_smooth() +
+        labs(x = "Distance run", y = "Time since departure")
+      
+    })
+    
+    output$av_table <- renderDataTable({
+      
+    })
+    
+    output$fun <- renderPrint({
+      x <- cat("In 2017, an 84 year old runner participated in the race! She also crossed the finished line in 2015 and 2016!")
+    })
+    observeEvent(input$lucky, {
+      output$go <- renderPrint({
+        cat("Go to the 3rd tab!")
+      })
+      # still figuring out how to add sound
+      output$sound <- renderUI( {tags$audio(src = "Yippy.mp3", type = "audio/mp3", autoplay = NA)})
+    })}
+  
+  
+  ####################################@
+  
+  
+  else{
+    
+    Gender <- reactive({
+      if (input$Gender == "Male"){
+        "M"
+      }
+      else {
+        "F"
+      }
+    })
+    
+    
+    output$av_plot <- renderPlot({
+      
+      
+      data_to_plot <- demographics_filter(data_all, input$Age, input$Gender, input$Country)
+      
+      data_to_plot <- rbind(pasttime(input$pastT, data_to_plot), goaltime(input$goalT, data_to_plot),
+                            top10percentmean(data_to_plot),bottom20percentmean(data_to_plot))
+      
+      ggplot(data = data_to_plot,
+             aes(x = milestone_km, y = mean_time, color = Label)) +
+        geom_point() +
+        geom_smooth() +
+        labs(x = "Distance run", y = "Time since departure")
+      
+    })
+    
+    output$av_table <- renderDataTable({
+      
+    })
+    
+    output$fun <- renderPrint({
+      x <- cat("In 2017, an 84 year old runner participated in the race! She also crossed the finished line in 2015 and 2016!")
+    })
+    observeEvent(input$lucky, {
+      output$go <- renderPrint({
+        cat("Go to the 3rd tab!")
+      })
+      # still figuring out how to add sound
+      output$sound <- renderUI( {tags$audio(src = "Yippy.mp3", type = "audio/mp3", autoplay = NA)})
+    })
+  }
+  
+  
+  
+}
