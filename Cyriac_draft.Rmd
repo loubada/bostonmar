@@ -46,7 +46,7 @@ library(ggplot2)
 library(dplyr)
 library (CyCyFns)
 
-data_to_plot <- demographics_filter(data_all, age = 42, gender = "M", nationality = "USA")
+data_to_plot <- demographics_filter(data_all, age = input$age, gender = input$gender, nationality = input$country)
 
 data_to_plot <- rbind(globalaverage(data_to_plot),
                       top10percentmean(data_to_plot),bottom20percentmean(data_to_plot))
