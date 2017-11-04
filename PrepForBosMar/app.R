@@ -67,7 +67,6 @@ ui <- fluidPage( theme = shinytheme('darkly'),
   
      
 
-# Define server logic required to draw a histogram
 server <- function(input, output) {
    
    output$av_plot <- renderPlot({
