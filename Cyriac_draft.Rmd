@@ -72,7 +72,7 @@ library (CyCyFns)
 
 data_to_plot <- demographics_filter(data_all, age = input$age, gender = input$gender, nationality = input$country)
 
-data_to_plot <- rbind(goaltime(input$goalT, data_all),
+data_to_plot <- rbind(goaltime(input$goalT, data_to_plot),
                       top10percentmean(data_to_plot),bottom20percentmean(data_to_plot))
 
 p <- ggplot(data = (data_to_plot),
@@ -93,7 +93,7 @@ library (CyCyFns)
 
 data_to_plot <- demographics_filter(data_all, age = input$age, gender = input$gender, nationality = input$country)
 
-data_to_plot <- rbind(pasttime(input$pastT, data_all),
+data_to_plot <- rbind(pasttime(input$pastT, data_to_plot),
                       top10percentmean(data_to_plot),bottom20percentmean(data_to_plot))
 
 p <- ggplot(data = (data_to_plot),
@@ -102,5 +102,27 @@ p <- ggplot(data = (data_to_plot),
       geom_smooth() +
       labs(x = "Distance run", y = "Time since departure")
 p
+```
+
+This function includes both the Goal Time and Past Time inputs
+
+```{r}
+
+library(ggplot2)
+library(dplyr)
+library (CyCyFns)
+
+data_to_plot <- demographics_filter(data_all, age = 42, gender = "M", nationality = "USA")
+
+data_to_plot <- rbind(pasttime(240, data_to_plot),
+                      top10percentmean(data_to_plot),bottom20percentmean(data_to_plot))
+
+p <- ggplot(data = (data_to_plot),
+        aes(x = milestone_km, y = mean_time, color = Label)) +
+      geom_point() +
+      geom_smooth() +
+      labs(x = "Distance run", y = "Time since departure")
+p
+
 ```
 
