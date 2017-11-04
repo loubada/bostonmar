@@ -22,7 +22,7 @@ ui <- fluidPage( theme = shinytheme('darkly'),
       numericInput(inputId = "age", label = h5("Age : "), value = 42),
       radioButtons(inputId = "gender", label = h5("Gender : "),
                    choices = list("Male" = 1, "Female" = 2, "Don't care!" = 3), 
-                   selected = 3),
+                   selected = 3, inline = TRUE),
       selectInput(inputId = "country", label = h5("Country :"), 
                   choices = c("-", countries_u), 
                   selected = NULL),
@@ -39,6 +39,7 @@ ui <- fluidPage( theme = shinytheme('darkly'),
       
       actionButton(inputId = "lucky", label = "Feeling lucky?"),
       br(),
+      br(),
       h6(textOutput("go"))
 
       
@@ -51,7 +52,11 @@ ui <- fluidPage( theme = shinytheme('darkly'),
         tabPanel("Yes I am!", 
                  br(),
                  br(),
-                 textOutput("fun"))
+                 textOutput("fun"),
+                 br(),
+                 br(),
+                 h6("Still feeling lucky? Click again!"))
+        
       )
     )
   )
