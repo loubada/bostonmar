@@ -24,7 +24,7 @@ View(data_all)
 
 
 #inefficient code, also if statements do not support vectorized input hence need for lapply, no optimised
-agebracket_1 <- function(X){
+agebracket <- function(X){
   if (X < 20){
     Y <- "<20"
   } else
@@ -67,7 +67,7 @@ agebracket_1 <- function(X){
 }
 
 #inefficient code
-agebracket2_1 <- function(age){
+agebracket2 <- function(age){
   ifelse (age < 20, Y <- "<20",
     ifelse (age < 25, Y <- "20 - 24",
       ifelse (age < 30, Y <- "25 - 29",
@@ -82,7 +82,7 @@ agebracket2_1 <- function(age){
 }
 
 #function to create age brackets based on input value of age
-agebracket <- function(age){
+agebracket3 <- function(age){
   ifelse (age < 20, "<20",
     ifelse (age < 25, "20 - 24",
       ifelse (age < 30, "25 - 29",
@@ -108,7 +108,7 @@ is.vector(C)
 
 #Function to create a new column
 agebracketcol <- function(X){
-  X["Age_Bracket"] <- X["Age"] %>% agebracket() %>% as.vector()
+  X["Age_Bracket"] <- X["Age"] %>% agebracket3() %>% as.vector()
   return(X)
 }
 
@@ -286,12 +286,12 @@ dim(data_all_dup_top10)
 
 #function to return a data frame that is plottable using ggplot2
 top10percentmean <- function(dataset){
-  top10 <- dataset %>% arrange(Official.Time.1) %>% head(round(length(dataset$Official.Time.1)*0.1)) %>% mutate(X0K.1 = rep(0)) %>% select("X0K.1", c(13:22)) %>% lapply(mean) %>% as.data.frame() %>% `row.names<-`(c("mean_time")) %>% t() %>% as.data.frame() %>%  setDT(keep.rownames=TRUE) %>% mutate(Label = rep("Top10"))
+  top10 <- dataset %>% arrange(Official.Time.1) %>% head(round(length(dataset$Official.Time.1)*0.1)) %>% mutate(X0K.1 = rep(0)) %>% select("X0K.1", c(13:22)) %>% lapply(mean) %>% as.data.frame() %>% `row.names<-`(c("mean time")) %>% t() %>% as.data.frame() %>%  setDT(keep.rownames=TRUE) %>% mutate(Label = rep("Top10"))
   top10$rn <- c(0, 5, 10, 15, 20, 21.10, 25, 30, 35, 40, 42.20)
-  colnames(top10)[1]<-("milestone_km")
+  colnames(top10)[1]<-("milestone(km)")
   return(top10)
 }  
-test_top10 <- top10percentmean(data_all_dup)
+test <- top10percentmean(data_all_dup)
 test
 ```
 ## 5. Top 10%, Bottom 20%, Global Average - Bottom 20%
@@ -317,7 +317,7 @@ bottom20percentmean <- function(dataset){
   return(bottom20)
 }  
 
-test_bottom20 <- bottom20percentmean(data_all_dup)
+test <- bottom20percentmean(data_all_dup)
 test
 ```
 
@@ -329,7 +329,7 @@ globalaverage <- function(dataset){
   colnames(global)[1]<-("milestone_km")
   return(global)
 }
-test_average <- globalaverage(data_all_dup)
+test <- globalaverage(data_all_dup)
 test
 ```
 ## 6. past time
@@ -340,7 +340,7 @@ pasttime <- function(pasttime, dataset){
   colnames(past_time)[1]<-("milestone_km")
   return(past_time)
 }
-test_past <- pasttime(200, data_all_dup)
+test <- pasttime(200, data_all_dup)
 test
 
 past <- 200
@@ -368,12 +368,8 @@ goaltime <- function(goaltime, dataset){
   
   return(goal_time)
 }
-test_goal <- goaltime(200, data_all_dup)
-test_goal
+test <- goaltime(200, data_all_dup)
+test
 
-
-test <- rbind(test_average, test_bottom20, test_goal, test_past, test_top10)
 test %>% ggplot(aes(x=milestone_km, y=mean_time, col=Label))+geom_point()+geom_line()
-test_goal %>% ggplot(aes(x=milestone_km, y=mean_time, col=Label))+geom_point()+geom_line()
-
 ```

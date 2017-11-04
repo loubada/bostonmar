@@ -9,38 +9,8 @@ library(stringr)
 data15$year <- rep(15, length(data15$X))
 data16$year <- rep(16, length(data16$X))
 data17$year <- rep(17, length(data17$X))
-
-names(data15_1)
-names(data16_1)
-names(data17_1)
-
-data_all <- rbind(data15_1,data16_1,data17_1)
-View(data_all)
-saveRDS(data_all, "data_all.rds")
-
-
-
-data15_1["Year"] <- rep("2015")
-data16_1["Year"] <- rep("2016")
-data17_1["Year"] <- rep("2017")
-
-
-data_all <- rbind(data15_1, data16_1, data17_1)
-
 View(data15)
 library(chron)
-
-data15_1 <- as.data.frame(data15_1)[ ,-c(9:18, 20,21)]
-data15_1 <- as.data.frame(data15_1)[ ,-c(13)]
-data16_1 <- as.data.frame(data16_1)[ ,-c(9:18, 20,21)]
-data17_1 <- as.data.frame(data17_1)[ ,-c(9:18, 20,21)]
-data17_1 <- as.data.frame(data15_1)[ ,-c(13)]
-data15_1 <- as.data.frame(data15_1)[ ,-c(1)]
-data17_1 <- as.data.frame(data17_1)[ ,-c(1)]
-
-data_all <- rbind(data15_1,data16_1,data17_1)
-
-View(data17_1)
 
 data15[, c(11:19, 22)] <- data15[, c(11:19, 22)] %>% lapply(times)
 index15 <- data15[, c(11:19, 22)] %>% lapply(function(X) {which(is.na(X))})
@@ -55,8 +25,8 @@ is.vector(vecunique15)
 data15_1 <- data15[-c(as.numeric(vecunique15)),]
 "NA" %in% data15_1[,c(11:19,22)]
 
-data16[, c(10:18, 21)] <- data16[, c(10:18, 21)] %>% lapply(times)
-index16 <- data16[, c(10:18, 21)] %>% lapply(function(X) {which(is.na(X))})
+data16[, c(11:19, 22)] <- data16[, c(11:19, 22)] %>% lapply(times)
+index16 <- data16[, c(11:19, 22)] %>% lapply(function(X) {which(is.na(X))})
 vec16 <- Reduce(c, index16)
 length(vec16)
 length(index16$X5K)+length(index16$X10K)+length(index16$X15K)+length(index16$X20K)+length(index16$Half)+length(index16$X25K)+length(index16$X30K)+length(index16$X35K)+length(index16$X40K)+length(index16$Official.Time)
@@ -80,7 +50,7 @@ duration_mins_15 <- data15_1[, c(11:19, 22)] %>% lapply(function(X) {
 })
 data15_1 <- c(data15_1, duration_mins_15)
 
-duration_mins_16 <- data16_1[, c(10:18, 21)] %>% lapply(function(X) {
+duration_mins_16 <- data16_1[, c(11:19, 22)] %>% lapply(function(X) {
   mins = hours(X)*60 + minutes(X) + seconds(X)/60
   return(mins)
 })
