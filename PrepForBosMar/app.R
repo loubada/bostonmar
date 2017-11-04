@@ -22,8 +22,8 @@ ui <- fluidPage( theme = shinytheme('darkly'),
       h4("Demographics :"),
       numericInput(inputId = "Age", label = h5("Age : "), value = 42),
       radioButtons(inputId = "Gender", label = h5("Gender : "),
-                   choices = list("M", "F", "Don't care!"), 
-                   selected = "M", inline = TRUE),
+                   choices = list("Male", "Female", "Don't care!"), 
+                   selected = "Male", inline = TRUE),
       selectInput(inputId = "Country", label = h5("Country :"), 
                   choices = c("-", countries_u), 
                   selected = "USA"),
@@ -70,7 +70,11 @@ ui <- fluidPage( theme = shinytheme('darkly'),
 
 server <- function(input, output) {
    #Issue: not plotting the graph! It does plot though if we give specific values, maybe an issue with the inputs
-   
+   Gender <- reactive({
+     if (input$Gender == "Male"){
+       "M"
+     }
+   })
  
     
   output$av_plot <- renderPlot({
