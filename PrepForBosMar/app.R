@@ -2,7 +2,7 @@ library(shiny)
 library(ggplot2)
 library(shinythemes)
 library(dplyr)
-
+library (CyCyFns)
 
 ui <- fluidPage( theme = shinytheme('darkly'),
   #shinythemes::themeSelector(),`
@@ -69,15 +69,18 @@ ui <- fluidPage( theme = shinytheme('darkly'),
      
 
 server <- function(input, output) {
-   
+   #Issue: not plotting the graph! Maybe the renderPlot function only works with plot functions and not ggplot functions
    output$av_plot <- renderPlot({
-     # input$age
-     # input$gender 
-     # input$country
-     # input$age
-     # input$pastT
-     # input$goalT
-    
+     data_to_plot <- demographics_filter(data_all, age = input$age, gender = input$gender, nationality = input$country)
+     
+     data_to_plot <- rbind(pasttime(input$pastT, data_to_plot), goaltime(input$goalT, data_to_plot),
+                           top10percentmean(data_to_plot),bottom20percentmean(data_to_plot))
+     
+    ggplot(data = (data_to_plot),
+                 aes(x = milestone_km, y = mean_time, color = Label)) +
+       geom_point() +
+       geom_smooth() +
+       labs(x = "Distance run", y = "Time since departure")
    })
    
    output$av_table <- renderDataTable({
