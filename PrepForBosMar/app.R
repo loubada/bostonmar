@@ -5,7 +5,8 @@ library(dplyr)
 
 
 ui <- fluidPage( theme = shinytheme('darkly'),
-  #shinythemes::themeSelector(),
+  #shinythemes::themeSelector(),`
+  #push again`
   
   h1("Prep for the next Boston Marathon!"),
   
@@ -22,7 +23,7 @@ ui <- fluidPage( theme = shinytheme('darkly'),
       numericInput(inputId = "age", label = h5("Age : "), value = 42),
       radioButtons(inputId = "gender", label = h5("Gender : "),
                    choices = list("Male" = 1, "Female" = 2, "Don't care!" = 3), 
-                   selected = 3),
+                   selected = 3, inline = TRUE),
       selectInput(inputId = "country", label = h5("Country :"), 
                   choices = c("-", countries_u), 
                   selected = NULL),
@@ -39,8 +40,10 @@ ui <- fluidPage( theme = shinytheme('darkly'),
       
       actionButton(inputId = "lucky", label = "Feeling lucky?"),
       br(),
-      h6(textOutput("go"))
+      br(),
+      h6(textOutput("go")),
 
+      uiOutput("sound")
       
     ),
     
@@ -51,7 +54,11 @@ ui <- fluidPage( theme = shinytheme('darkly'),
         tabPanel("Yes I am!", 
                  br(),
                  br(),
-                 textOutput("fun"))
+                 textOutput("fun"),
+                 br(),
+                 br(),
+                 h6("Still feeling lucky? Click again!"))
+        
       )
     )
   )
@@ -61,7 +68,6 @@ ui <- fluidPage( theme = shinytheme('darkly'),
   
      
 
-# Define server logic required to draw a histogram
 server <- function(input, output) {
    
    output$av_plot <- renderPlot({
@@ -91,6 +97,8 @@ server <- function(input, output) {
      output$go <- renderPrint({
        cat("Go to the 3rd tab!")
      })
+     # still figuring out how to add sound
+     output$sound <- renderUI( {tags$audio(src = "Yippy.mp3", type = "audio/mp3", autoplay = NA)})
    })
    
    
