@@ -1,0 +1,152 @@
+---
+title: "Cyriac: Plot Functions"
+output: html_notebook
+---
+
+--------------------------------------------------------------------------------------------------
+
+To summarise, the functions created by Ruoy that I use here are:
+1) demographics_filter
+2) globalaverage
+3) top10percentmean
+4) bottom20percentmean
+5) goaltime
+6) pasttime
+
+and the inputs from Louise's Shiny App are:
+1) input$age
+2) input$gender
+3) input$country
+4) input$pastT
+5) input$goalT
+
+--------------------------------------------------------------------------------------------------
+
+This is the function that plots the global average graph in the shiny app
+
+```{r}
+
+library(ggplot2)
+library(dplyr)
+library (CyCyFns)
+
+data_to_plot <- globalaverage(data_all)
+p <- ggplot(data = data_to_plot,
+       aes(x = milestone_km, y = mean_time)
+          ) +
+     geom_point() +
+     geom_smooth() +
+     labs(x = "Distance run", y = "Time since departure")
+p
+```
+
+This is the function that plots the average speed of the whole population of runners vs top 10% vs bottom 20%
+
+```{r}
+
+library(ggplot2)
+library(dplyr)
+library (CyCyFns)
+
+data_to_plot <- rbind(globalaverage(data_all),
+                      top10percentmean(data_all),bottom20percentmean(data_all))
+
+p <- ggplot(data = (data_to_plot),
+        aes(x = milestone_km, y = mean_time, color = Label)) +
+      geom_point() +
+      geom_smooth() +
+      labs(x = "Distance run", y = "Time since departure")
+p
+```
+
+This is the function that plots the average speed of our selection of runners (cf. inputs from the Shiny App) vs top 10% of our selection vs bottom 20% of our selection
+
+```{r}
+
+library(ggplot2)
+library(dplyr)
+library (CyCyFns)
+
+data_to_plot <- demographics_filter(data_all, age = input$age, gender = input$gender, nationality = input$country)
+
+data_to_plot <- rbind(globalaverage(data_to_plot),
+                      top10percentmean(data_to_plot),bottom20percentmean(data_to_plot))
+
+p <- ggplot(data = (data_to_plot),
+        aes(x = milestone_km, y = mean_time, color = Label)) +
+      geom_point() +
+      geom_smooth() +
+      labs(x = "Distance run", y = "Time since departure")
+p
+
+```
+
+This function includes the Goal Time input
+
+```{r}
+
+library(ggplot2)
+library(dplyr)
+library (CyCyFns)
+
+data_to_plot <- demographics_filter(data_all, age = input$age, gender = input$gender, nationality = input$country)
+
+data_to_plot <- rbind(goaltime(input$goalT, data_to_plot),
+                      top10percentmean(data_to_plot),bottom20percentmean(data_to_plot))
+
+p <- ggplot(data = (data_to_plot),
+        aes(x = milestone_km, y = mean_time, color = Label)) +
+      geom_point() +
+      geom_smooth() +
+      labs(x = "Distance run", y = "Time since departure")
+p
+```
+
+This function includes the Past Time input
+
+```{r}
+
+library(ggplot2)
+library(dplyr)
+library (CyCyFns)
+
+data_to_plot <- demographics_filter(data_all, age = input$age, gender = input$gender, nationality = input$country)
+
+data_to_plot <- rbind(pasttime(input$pastT, data_to_plot),
+                      top10percentmean(data_to_plot),bottom20percentmean(data_to_plot))
+
+p <- ggplot(data = (data_to_plot),
+        aes(x = milestone_km, y = mean_time, color = Label)) +
+      geom_point() +
+      geom_smooth() +
+      labs(x = "Distance run", y = "Time since departure")
+p
+```
+
+This function includes both the Goal Time and Past Time inputs
+
+```{r}
+
+library(ggplot2)
+library(dplyr)
+library (CyCyFns)
+
+data_to_plot <- demographics_filter(data_all, age = input$age, gender = input$gender, nationality = input$country)
+
+data_to_plot <- rbind(pasttime(input$pastT, data_to_plot), goaltime(input$goalT, data_to_plot),
+                      top10percentmean(data_to_plot),bottom20percentmean(data_to_plot))
+
+p <- ggplot(data = (data_to_plot),
+        aes(x = milestone_km, y = mean_time, color = Label)) +
+      geom_point() +
+      geom_smooth() +
+      labs(x = "Distance run", y = "Time since departure")
+p
+
+```
+
+
+```{r}
+
+```
+
