@@ -1,9 +1,28 @@
 ---
-title: "Cyriac_draft"
+title: "Cyriac: Plot Functions"
 output: html_notebook
 ---
 
-This is the function that plots the output graph in the shiny app
+--------------------------------------------------------------------------------------------------
+
+To summarise, the functions created by Ruoy that I use here are:
+1) demographics_filter
+2) globalaverage
+3) top10percentmean
+4) bottom20percentmean
+5) goaltime
+6) pasttime
+
+and the inputs from Louise's Shiny App are:
+1) input$age
+2) input$gender
+3) input$country
+4) input$pastT
+5) input$goalT
+
+--------------------------------------------------------------------------------------------------
+
+This is the function that plots the global average graph in the shiny app
 
 ```{r}
 
@@ -112,9 +131,9 @@ library(ggplot2)
 library(dplyr)
 library (CyCyFns)
 
-data_to_plot <- demographics_filter(data_all, age = 42, gender = "M", nationality = "USA")
+data_to_plot <- demographics_filter(data_all, age = input$age, gender = input$gender, nationality = input$country)
 
-data_to_plot <- rbind(pasttime(240, data_to_plot), goaltime(210, data_to_plot),
+data_to_plot <- rbind(pasttime(input$pastT, data_to_plot), goaltime(input$goalT, data_to_plot),
                       top10percentmean(data_to_plot),bottom20percentmean(data_to_plot))
 
 p <- ggplot(data = (data_to_plot),
@@ -123,6 +142,11 @@ p <- ggplot(data = (data_to_plot),
       geom_smooth() +
       labs(x = "Distance run", y = "Time since departure")
 p
+
+```
+
+
+```{r}
 
 ```
 
