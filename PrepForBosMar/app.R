@@ -41,9 +41,6 @@ ui <- fluidPage( theme = shinytheme('darkly'),
       br(),
       br(),
       h6(textOutput("go")),
-      
-      # TEST I WILL CHANGE IT LATER TO ONLY ACTION WHEN WE PRESS THE LUCKY BUTTON
-      #tags$audio(src = "Yippy.mp3", type = "audio/mp3", autoplay = NA),
 
       uiOutput("sound")
       
