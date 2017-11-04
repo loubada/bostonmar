@@ -43,8 +43,9 @@ ui <- fluidPage( theme = shinytheme('darkly'),
       h6(textOutput("go")),
       
       # TEST I WILL CHANGE IT LATER TO ONLY ACTION WHEN WE PRESS THE LUCKY BUTTON
-      tags$audio(src = "Yippy.mp3", type = "audio/mp3", autoplay = NA)
+      #tags$audio(src = "Yippy.mp3", type = "audio/mp3", autoplay = NA),
 
+      uiOutput("sound")
       
     ),
     
@@ -100,7 +101,7 @@ server <- function(input, output) {
        cat("Go to the 3rd tab!")
      })
      # still figuring out how to add sound
-     tags$audio(src = "Yippy.mp3", type = "audio/mp3", autoplay = NA, controls = NA)
+     output$sound <- renderUI( {tags$audio(src = "Yippy.mp3", type = "audio/mp3", autoplay = NA)})
    })
    
    
