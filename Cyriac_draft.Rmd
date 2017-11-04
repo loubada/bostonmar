@@ -62,7 +62,7 @@ p
 
 ```
 
-This function include the Goal Time input
+This function includes the Goal Time input
 
 ```{r}
 
@@ -83,4 +83,24 @@ p <- ggplot(data = (data_to_plot),
 p
 ```
 
+This function includes the Past Time input
+
+```{r}
+
+library(ggplot2)
+library(dplyr)
+library (CyCyFns)
+
+data_to_plot <- demographics_filter(data_all, age = input$age, gender = input$gender, nationality = input$country)
+
+data_to_plot <- rbind(pasttime(input$pastT, data_all),
+                      top10percentmean(data_to_plot),bottom20percentmean(data_to_plot))
+
+p <- ggplot(data = (data_to_plot),
+        aes(x = milestone_km, y = mean_time, color = Label)) +
+      geom_point() +
+      geom_smooth() +
+      labs(x = "Distance run", y = "Time since departure")
+p
+```
 
