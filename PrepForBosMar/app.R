@@ -26,7 +26,7 @@ ui <- fluidPage( theme = shinytheme('darkly'),
                    selected = "Male", inline = TRUE),
       selectInput(inputId = "Country", label = h5("Country :"), 
                   choices = c("-", countries_u), 
-                  selected = "USA"),
+                  selected = "-"),
       
       hr(),
       
@@ -88,28 +88,59 @@ server <- function(input, output) {
     output$av_plot <- renderPlot({
       
       if (is.null(Gender())){
-        data_to_plot <- demographics_filter(data = data_all, age = input$Age, nationality = input$Country)
+        if (input$Country == "-"){
+          data_to_plot <- demographics_filter(data = data_all, age = input$Age)
+          
+          data_to_plot <- rbind(pasttime(input$pastT, data_to_plot), goaltime(input$goalT, data_to_plot),
+                                top10percentmean(data_to_plot),bottom20percentmean(data_to_plot))
+          
+          ggplot(data = data_to_plot,
+                 aes(x = milestone_km, y = mean_time, color = Label)) +
+            geom_point() +
+            geom_smooth() +
+            labs(x = "Distance run", y = "Time since departure") 
+        }
+        else {
+          data_to_plot <- demographics_filter(data = data_all, age = input$Age, nationality = input$Country)
+          
+          data_to_plot <- rbind(pasttime(input$pastT, data_to_plot), goaltime(input$goalT, data_to_plot),
+                                top10percentmean(data_to_plot),bottom20percentmean(data_to_plot))
+          
+          ggplot(data = data_to_plot,
+                 aes(x = milestone_km, y = mean_time, color = Label)) +
+            geom_point() +
+            geom_smooth() +
+            labs(x = "Distance run", y = "Time since departure") 
+        }
         
-        data_to_plot <- rbind(pasttime(input$pastT, data_to_plot), goaltime(input$goalT, data_to_plot),
-                              top10percentmean(data_to_plot),bottom20percentmean(data_to_plot))
-        
-        ggplot(data = data_to_plot,
-               aes(x = milestone_km, y = mean_time, color = Label)) +
-          geom_point() +
-          geom_smooth() +
-          labs(x = "Distance run", y = "Time since departure") 
       }
       else {
-        data_to_plot <- demographics_filter(data = data_all, age = input$Age, gender = Gender(), nationality = input$Country)
+        if (input$Country == "-"){
+          data_to_plot <- demographics_filter(data = data_all, age = input$Age, gender = Gender())
+          
+          data_to_plot <- rbind(pasttime(input$pastT, data_to_plot), goaltime(input$goalT, data_to_plot),
+                                top10percentmean(data_to_plot),bottom20percentmean(data_to_plot))
+          
+          ggplot(data = data_to_plot,
+                 aes(x = milestone_km, y = mean_time, color = Label)) +
+            geom_point() +
+            geom_smooth() +
+            labs(x = "Distance run", y = "Time since departure") 
+        }
+        else {
+          data_to_plot <- demographics_filter(data = data_all, age = input$Age, gender = Gender(), nationality = input$Country)
+          
+          data_to_plot <- rbind(pasttime(input$pastT, data_to_plot), goaltime(input$goalT, data_to_plot),
+                                top10percentmean(data_to_plot),bottom20percentmean(data_to_plot))
+          
+          ggplot(data = data_to_plot,
+                 aes(x = milestone_km, y = mean_time, color = Label)) +
+            geom_point() +
+            geom_smooth() +
+            labs(x = "Distance run", y = "Time since departure") 
+        }
         
-        data_to_plot <- rbind(pasttime(input$pastT, data_to_plot), goaltime(input$goalT, data_to_plot),
-                              top10percentmean(data_to_plot),bottom20percentmean(data_to_plot))
         
-        ggplot(data = data_to_plot,
-               aes(x = milestone_km, y = mean_time, color = Label)) +
-          geom_point() +
-          geom_smooth() +
-          labs(x = "Distance run", y = "Time since departure") 
       }
       
       
