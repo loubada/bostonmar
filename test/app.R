@@ -50,7 +50,7 @@ ui <- fluidPage( theme = shinytheme('darkly'),
                    mainPanel(
                      tabsetPanel(
                        tabPanel("Compare yourself to others", plotOutput("av_plot")), 
-                       tabPanel("Your goal time splits", tableOutput("av_table")), 
+                       tabPanel("Your goal time splits", tableOutput('av_table')), 
                        tabPanel("Yes I am!", 
                                 br(),
                                 br(),
@@ -150,19 +150,18 @@ server <- function(input, output) {
   
   
   ###############################################
+
+  data_for_table <- reactive({
+    dt <- demographics_filter(data = data_all, age = input$Age, nationality = input$Country)
+    dt <-  goaltime(input$goalT, dt)
+    dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(mean_time, milestone_km)
+    })
+
   
-  
-  output$av_table <- renderDataTable({
-    data_for_table <- demographics_filter(data = data_all, age = input$Age, nationality = input$Country)
-    data_for_table <- goaltime(input$goalT, data_for_table)
-    
-    
-    
-    data_for_table <- data_for_table %>% filter(try$Label == "Goal_time_0to15_mins_Faster") %>% select(mean_time, milestone_km)
-    
-    #table1 <- table(data_for_table$milestone_km, data_for_table$mean_time)
-    mosaicplot(x= data_for_table$milestone_km, y = data_for_table$mean_time)
-  })
+  output$av_table <- renderTable(
+    {data_for_table()}
+   
+  )
   
   
   ###############################################  
