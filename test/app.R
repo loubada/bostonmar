@@ -152,9 +152,34 @@ server <- function(input, output) {
   ###############################################
 
   data_for_table <- reactive({
-    dt <- demographics_filter(data = data_all, age = input$Age, nationality = input$Country)
-    dt <-  goaltime(input$goalT, dt)
-    dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(mean_time, milestone_km)
+    if(is.null(Gender())){
+      if(input$Country == "-"){
+        dt <- demographics_filter(data = data_all, age = input$Age)
+        dt <-  goaltime(input$goalT, dt)
+        dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(mean_time, milestone_km)
+      }
+      else{
+        dt <- demographics_filter(data = data_all, age = input$Age, nationality = input$Country)
+        dt <-  goaltime(input$goalT, dt)
+        dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(mean_time, milestone_km)
+      }
+      
+    }
+    else{
+      if(input$Country == "-"){
+        dt <- demographics_filter(data = data_all, age = input$Age, gender = Gender())
+        dt <-  goaltime(input$goalT, dt)
+        dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(mean_time, milestone_km)
+      }
+      else{
+        dt <- demographics_filter(data = data_all, age = input$Age, gender = Gender(), nationality = input$Country)
+        dt <-  goaltime(input$goalT, dt)
+        dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(mean_time, milestone_km)
+      }
+      
+    }
+    
+    
     })
 
   
