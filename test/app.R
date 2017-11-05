@@ -20,7 +20,7 @@ ui <- fluidPage( theme = shinytheme('darkly'),
                    
                    sidebarPanel(
                      h4("Demographics :"),
-                     numericInput(inputId = "Age", label = h5("Age : "), value = 42),
+                     numericInput(inputId = "Age", label = h5("Age : "), value = NULL, min = 18),
                      radioButtons(inputId = "Gender", label = h5("Gender : "),
                                   choices = list("Male", "Female", "Don't care!"), 
                                   selected = "Don't care!", inline = TRUE),
