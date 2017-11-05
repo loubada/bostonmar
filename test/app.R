@@ -434,7 +434,7 @@ server <- function(input, output) {
               nationality = input$Country
             )
           dt <-  goaltime(input$goalT, dt)
-          dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(milestone_km, mean_time)
+          dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(milestone_km, mean_time) 
         }
         
       }
