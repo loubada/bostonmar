@@ -91,7 +91,10 @@ ui <- fluidPage(
         
     mainPanel(tabsetPanel(
       tabPanel("Compare yourself to others", plotOutput("av_plot")),
-      tabPanel("Your goal time splits", tableOutput('av_table')),
+      tabPanel("Your goal time splits", 
+               tableOutput('av_table'),
+               br(),
+               h6("PS. The milestones are in kilometers and the goals are in minutes")),
       tabPanel(
         "Yes I am!",
         br(),
@@ -362,12 +365,12 @@ server <- function(input, output) {
         if (is.numeric(input$Age)){
           dt <- demographics_filter(data = data_all, age = input$Age)
           dt <-  goaltime(input$goalT, dt)
-          dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(milestone_km, mean_time)
+          dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(milestone_km, mean_time) %>% rename(Milestone = milestone_km, Goal = mean_time)
         }
         else{
           dt <- data_all
           dt <-  goaltime(input$goalT, dt)
-          dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(milestone_km, mean_time)
+          dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(milestone_km, mean_time) %>% rename(Milestone = milestone_km, Goal = mean_time)
         }
         
       }
@@ -380,7 +383,7 @@ server <- function(input, output) {
               nationality = input$Country
             )
           dt <-  goaltime(input$goalT, dt)
-          dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(milestone_km, mean_time)
+          dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(milestone_km, mean_time) %>% rename(Milestone = milestone_km, Goal = mean_time)
         }
         else{
           dt <-
@@ -389,7 +392,7 @@ server <- function(input, output) {
               nationality = input$Country
             )
           dt <-  goaltime(input$goalT, dt)
-          dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(milestone_km, mean_time)
+          dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(milestone_km, mean_time) %>% rename(Milestone = milestone_km, Goal = mean_time)
         }
         
       }
@@ -403,14 +406,14 @@ server <- function(input, output) {
                                 age = input$Age,
                                 gender = Gender())
           dt <-  goaltime(input$goalT, dt)
-          dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(milestone_km, mean_time)
+          dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(milestone_km, mean_time) %>% rename(Milestone = milestone_km, Goal = mean_time)
         }
         else{
           dt <-
             demographics_filter(data = data_all,
                                 gender = Gender())
           dt <-  goaltime(input$goalT, dt)
-          dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(milestone_km, mean_time)
+          dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(milestone_km, mean_time) %>% rename(Milestone = milestone_km, Goal = mean_time)
         }
         
       }
@@ -424,7 +427,7 @@ server <- function(input, output) {
               nationality = input$Country
             )
           dt <-  goaltime(input$goalT, dt)
-          dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(milestone_km, mean_time)
+          dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(milestone_km, mean_time) %>% rename(Milestone = milestone_km, Goal = mean_time)
         }
         else{
           dt <-
@@ -434,7 +437,7 @@ server <- function(input, output) {
               nationality = input$Country
             )
           dt <-  goaltime(input$goalT, dt)
-          dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(milestone_km, mean_time) 
+          dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(milestone_km, mean_time) %>% rename(Milestone = milestone_km, Goal = mean_time)
         }
         
       }
