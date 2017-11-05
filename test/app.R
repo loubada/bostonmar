@@ -53,7 +53,7 @@ ui <- fluidPage(
       selectInput(
         inputId = "Country",
         label = h5("Country :"),
-        choices = c("-", countries_u),
+        choices = c("-", unique(levels(data_all$Country))),
         selected = "-"
       ),
       
@@ -452,13 +452,18 @@ server <- function(input, output) {
   
 ##########################################################        LUCKY      ##########################################################
   
+  x <- c("In 2017, an 84 year old runner participated in the race! She also crossed the finished line in 2015 and 2016!",
+         "The faster runner in 2015 completed the Boston marathon in 129.2833 min!",
+         "The faster runner in 2016 completed the Boston marathon in 132.75 min!",
+         "The faster runner in 2017 completed the Boston marathon in 129.6167 min!",
+         "On average, women take 20.7 minutes more to complete the marathon",
+         "The mode age is 45. The Boston Marathon is for people going through a mid-life crisis, huh?"
+         
+         
+    
+  )
   
-  output$fun <- renderPrint({
-    x <-
-      cat(
-        "In 2017, an 84 year old runner participated in the race! She also crossed the finished line in 2015 and 2016!"
-      )
-  })
+  
   observeEvent(input$lucky, {
     output$go <- renderPrint({
       cat("Go to the 3rd tab!")
@@ -469,6 +474,11 @@ server <- function(input, output) {
                    type = "audio/mp3",
                    autoplay = NA)
       })
+    rand <- sample(1:length(x), 1)
+    output$fun <- renderPrint({
+      cat(x[rand]
+        )
+    })
   })
   
   
