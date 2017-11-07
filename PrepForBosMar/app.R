@@ -97,7 +97,7 @@ server <- function(input, output) {
           ggplot(data = data_to_plot,
                  aes(x = milestone_km, y = mean_time, color = Label)) +
             geom_point() +
-            geom_smooth() +
+            geom_line() +
             labs(x = "Distance run", y = "Time since departure") 
         }
         else {
@@ -109,7 +109,7 @@ server <- function(input, output) {
           ggplot(data = data_to_plot,
                  aes(x = milestone_km, y = mean_time, color = Label)) +
             geom_point() +
-            geom_smooth() +
+            geom_line() +
             labs(x = "Distance run", y = "Time since departure") 
         }
         
@@ -124,7 +124,7 @@ server <- function(input, output) {
           ggplot(data = data_to_plot,
                  aes(x = milestone_km, y = mean_time, color = Label)) +
             geom_point() +
-            geom_smooth() +
+            geom_line() +
             labs(x = "Distance run", y = "Time since departure") 
         }
         else {
@@ -136,7 +136,7 @@ server <- function(input, output) {
           ggplot(data = data_to_plot,
                  aes(x = milestone_km, y = mean_time, color = Label)) +
             geom_point() +
-            geom_smooth() +
+            geom_line() +
             labs(x = "Distance run", y = "Time since departure") 
         }
         

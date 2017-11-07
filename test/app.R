@@ -58,15 +58,21 @@ ui <- fluidPage(
       ),
       
       hr(),
-      
+
       h4("Your times (min) :"),
-      sliderInput(
-        inputId = "pastT",
-        label = h5("Past Time : "),
-        min = 120,
-        max = 520,
-        value = NULL
+      
+      checkboxInput("question_past", "I have ran a marathon already"),
+      conditionalPanel(
+        condition = "input.question_past == true",
+        sliderInput(
+          inputId = "pastT",
+          label = h5("Past Time : "),
+          min = 120,
+          max = 520,
+          value = NULL
+        )
       ),
+     
       sliderInput(
         inputId = "goalT",
         label = h5("Goal Time : "),
@@ -74,6 +80,8 @@ ui <- fluidPage(
         max = 520,
         value = 210
       ),
+      
+      
       
       hr(),
       

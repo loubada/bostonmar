@@ -145,6 +145,16 @@ p
 
 ```
 
+Error message when goal time or past time is too low (i.e. faster than WR) or too high (i.e.above time limits)
+
+```{r}
+
+
+
+
+```
+
+Error message if Past Time too different from Goal Time
 
 ```{r}
 
