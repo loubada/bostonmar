@@ -81,7 +81,10 @@ ui <- fluidPage(
         value = 210
       ),
       
-      
+      conditionalPanel(
+        condition = "input.pastT >= input.goalT + 60",
+        h4 ("You are aiming high")
+      ),
       
       hr(),
       
