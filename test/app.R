@@ -80,10 +80,17 @@ ui <- fluidPage(
         max = 520,
         value = 210
       ),
-      
+      conditionalPanel(
+        condition = "input.goalT > 390 ",
+        h6 ("Warning: You have to finish in less than 6h30 if you want to receive your medal ")
+      ),
+      conditionalPanel(
+        condition = "input.goalT <= 123 ",
+        h6 ("Impressive: You would break the record on the marathon")
+      ),
       conditionalPanel(
         condition = "input.pastT >= input.goalT + 60",
-        h4 ("You are aiming high")
+        h4 ("Do you really think you can improve that much?")
       ),
       
       hr(),
