@@ -1,4 +1,4 @@
-# LOUISE
+# LOUISE AND CYCY
 
 library(shiny)
 library(ggplot2)
@@ -75,12 +75,16 @@ ui <- fluidPage(
         )
       ),
      
-      sliderInput(
-        inputId = "goalT",
-        label = h5("Goal Time : "),
-        min = 120,
-        max = 520,
-        value = 520
+      checkboxInput("question_goal", "I want to benchmark my time"),
+      conditionalPanel(
+        condition = "input.question_goal == true",
+        sliderInput(
+          inputId = "goalT",
+          label = h5("Goal Time : "),
+          min = 120,
+          max = 520,
+          value = NULL
+        )
       ),
       
 
@@ -88,15 +92,15 @@ ui <- fluidPage(
       
 
       conditionalPanel(
-        condition = "input.goalT > 390 ",
+        condition = c("input.question_goal == true", "input.goalT >= 390 "),
         h6 ("Warning: You have to finish in less than 6h30 if you want to receive your medal ")
       ),
       conditionalPanel(
-        condition = "input.goalT <= 123 ",
+        condition = c("input.goalT <= 123 ", "input.question_goal == true"),
         h6 ("Impressive: You would break the record on the marathon")
       ),
       conditionalPanel(
-        condition = "input.pastT >= input.goalT + 60",
+        condition = c("input.pastT >= input.goalT + 60", "input.question_goal == true", "input.question_past == true"),
         h4 ("Do you really think you can improve that much?")
       ),
       
@@ -169,6 +173,8 @@ server <- function(input, output) {
     if (is.null(Gender())) {
       if (input$Country == "-") {
         if (is.numeric(input$Age)) {
+          if (input$question_past == FALSE) {
+            if (input$question_goal == FALSE) {
           
 ##################### Inputs : AGE ########################
           
@@ -177,7 +183,29 @@ server <- function(input, output) {
           
           data_to_plot <-
             rbind(
-              pasttime(input$pastT, data_to_plot),
+              top10percentmean(data_to_plot),
+              bottom20percentmean(data_to_plot)
+            )
+          
+          ggplot(data = data_to_plot,
+                 aes(
+                   x = milestone_km,
+                   y = mean_time,
+                   color = Label
+                 )) +
+            geom_point() +
+            geom_smooth() +
+            labs(x = "Distance run", y = "Time since departure")
+              }
+              else{
+          
+##################### Inputs : AGE + GOAL TIME ########################
+          
+          data_to_plot <-
+              demographics_filter(data = data_all, age = input$Age)
+          
+          data_to_plot <-
+            rbind(
               goaltime(input$goalT, data_to_plot),
               top10percentmean(data_to_plot),
               bottom20percentmean(data_to_plot)
@@ -192,12 +220,39 @@ server <- function(input, output) {
             geom_point() +
             geom_smooth() +
             labs(x = "Distance run", y = "Time since departure")
+              }
+        
+            }
+          else {
+          if (input$question_goal == FALSE) {
+          
+          ##################### Inputs : AGE + PAST TIME ########################
+          
+          data_to_plot <-
+            demographics_filter(data = data_all, age = input$Age)
+          
+          data_to_plot <-
+            rbind(
+              pasttime(input$pastT, data_to_plot),
+              top10percentmean(data_to_plot),
+              bottom20percentmean(data_to_plot)
+            )
+          
+          ggplot(data = data_to_plot,
+                 aes(
+                   x = milestone_km,
+                   y = mean_time,
+                   color = Label
+                 )) +
+            geom_point() +
+            geom_smooth() +
+            labs(x = "Distance run", y = "Time since departure")
         }
-        else{
+          else{
           
-##################### Inputs : NULL ########################
+          ##################### Inputs : AGE + GOAL TIME + PAST TIME ########################
           
-          data_to_plot <- data_all
+          data_to_plot <- demographics_filter(data = data_all, age = input$Age)
           
           data_to_plot <-
             rbind(
@@ -218,191 +273,731 @@ server <- function(input, output) {
             labs(x = "Distance run", y = "Time since departure")
         }
         
+          }
+        }
+        else{
+            if (input$question_past == FALSE) {
+              if (input$question_goal == FALSE) {
+                
+                ##################### Inputs : NOTHING ########################
+                
+                data_to_plot <-
+                  demographics_filter(data = data_all)
+                
+                data_to_plot <-
+                  rbind(
+                    top10percentmean(data_to_plot),
+                    bottom20percentmean(data_to_plot)
+                  )
+                
+                ggplot(data = data_to_plot,
+                       aes(
+                         x = milestone_km,
+                         y = mean_time,
+                         color = Label
+                       )) +
+                  geom_point() +
+                  geom_smooth() +
+                  labs(x = "Distance run", y = "Time since departure")
+              }
+              else{
+                
+                ##################### Inputs : GOAL TIME ########################
+                
+                data_to_plot <- data_all
+                
+                data_to_plot <-
+                  rbind(
+                    goaltime(input$goalT, data_to_plot),
+                    top10percentmean(data_to_plot),
+                    bottom20percentmean(data_to_plot)
+                  )
+                
+                ggplot(data = data_to_plot,
+                       aes(
+                         x = milestone_km,
+                         y = mean_time,
+                         color = Label
+                       )) +
+                  geom_point() +
+                  geom_smooth() +
+                  labs(x = "Distance run", y = "Time since departure")
+              }
+            }
+            else {
+              if (input$question_goal == FALSE) {
+                ##################### Inputs : PAST TIME ########################
+                
+                data_to_plot <-
+                  demographics_filter(data = data_all)
+                
+                data_to_plot <-
+                  rbind(
+                    pasttime(input$pastT, data_to_plot),
+                    top10percentmean(data_to_plot),
+                    bottom20percentmean(data_to_plot)
+                  )
+                
+                ggplot(data = data_to_plot,
+                       aes(
+                         x = milestone_km,
+                         y = mean_time,
+                         color = Label
+                       )) +
+                  geom_point() +
+                  geom_smooth() +
+                  labs(x = "Distance run", y = "Time since departure")
+              }
+              else{
+                ##################### Inputs : GOAL TIME + PAST TIME ########################
+                
+                data_to_plot <- data_all
+                
+                data_to_plot <-
+                  rbind(
+                    pasttime(input$pastT, data_to_plot),
+                    goaltime(input$goalT, data_to_plot),
+                    top10percentmean(data_to_plot),
+                    bottom20percentmean(data_to_plot)
+                  )
+                
+                ggplot(data = data_to_plot,
+                       aes(
+                         x = milestone_km,
+                         y = mean_time,
+                         color = Label
+                       )) +
+                  geom_point() +
+                  geom_smooth() +
+                  labs(x = "Distance run", y = "Time since departure")
+              }
+              
+            }
+          }
       }
       else {
-        if (is.numeric(input$Age)){
-          
-##################### Inputs : AGE + COUNTRY ########################
-          
-          data_to_plot <-
-            demographics_filter(
-              data = data_all,
-              age = input$Age,
-              nationality = input$Country
-            )
-          
-          data_to_plot <-
-            rbind(
-              pasttime(input$pastT, data_to_plot),
-              goaltime(input$goalT, data_to_plot),
-              top10percentmean(data_to_plot),
-              bottom20percentmean(data_to_plot)
-            )
-          
-          ggplot(data = data_to_plot,
-                 aes(
-                   x = milestone_km,
-                   y = mean_time,
-                   color = Label
-                 )) +
-            geom_point() +
-            geom_smooth() +
-            labs(x = "Distance run", y = "Time since departure")
+        if (is.numeric(input$Age)) {
+          if (input$question_past == FALSE) {
+            if (input$question_goal == FALSE) {
+              
+              ##################### Inputs : COUNTRY + AGE ########################
+              
+              data_to_plot <-
+                demographics_filter(data = data_all, age = input$Age, nationality = input$Country)
+              
+              data_to_plot <-
+                rbind(
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+            else{
+              
+              ##################### Inputs : COUNTRY + AGE + GOAL TIME ########################
+              
+              data_to_plot <-
+                demographics_filter(data = data_all, age = input$Age, nationality = input$Country)
+              
+              data_to_plot <-
+                rbind(
+                  goaltime(input$goalT, data_to_plot),
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+            
+          }
+          else {
+            if (input$question_goal == FALSE) {
+              
+              ##################### Inputs : COUNTRY + AGE + PAST TIME ########################
+              
+              data_to_plot <-
+                demographics_filter(data = data_all, age = input$Age, nationality = input$Country)
+              
+              data_to_plot <-
+                rbind(
+                  pasttime(input$pastT, data_to_plot),
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+            else{
+              
+              ##################### Inputs : COUNTRY + AGE + GOAL TIME + PAST TIME ########################
+              
+              data_to_plot <- demographics_filter(data = data_all, age = input$Age, nationality = input$Country)
+              
+              data_to_plot <-
+                rbind(
+                  pasttime(input$pastT, data_to_plot),
+                  goaltime(input$goalT, data_to_plot),
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+            
+          }
         }
         else{
-          
-##################### Inputs : COUNTRY ########################
-          
-          data_to_plot <-
-            demographics_filter(
-              data = data_all,
-              nationality = input$Country
-            )
-          
-          data_to_plot <-
-            rbind(
-              pasttime(input$pastT, data_to_plot),
-              goaltime(input$goalT, data_to_plot),
-              top10percentmean(data_to_plot),
-              bottom20percentmean(data_to_plot)
-            )
-          
-          ggplot(data = data_to_plot,
-                 aes(
-                   x = milestone_km,
-                   y = mean_time,
-                   color = Label
-                 )) +
-            geom_point() +
-            geom_smooth() +
-            labs(x = "Distance run", y = "Time since departure")
+          if (input$question_past == FALSE) {
+            if (input$question_goal == FALSE) {
+              
+              ##################### Inputs : COUNTRY ########################
+              
+              data_to_plot <-
+                demographics_filter(data = data_all, nationality = input$Country)
+              
+              data_to_plot <-
+                rbind(
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+            else{
+              
+              ##################### Inputs : COUNTRY + GOAL TIME ########################
+              
+              data_to_plot <- 
+                demographics_filter(data = data_all, nationality = input$Country)
+              
+              data_to_plot <-
+                rbind(
+                  goaltime(input$goalT, data_to_plot),
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+          }
+          else {
+            if (input$question_goal == FALSE) {
+              ##################### Inputs : COUNTRY + PAST TIME ########################
+              
+              data_to_plot <-
+                demographics_filter(data = data_all, nationality = input$Country)
+              
+              data_to_plot <-
+                rbind(
+                  pasttime(input$pastT, data_to_plot),
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+            else{
+              ##################### Inputs : COUNTRY + GOAL TIME + PAST TIME ########################
+              
+              data_to_plot <- 
+                demographics_filter(data = data_all, nationality = input$Country)
+              
+              data_to_plot <-
+                rbind(
+                  pasttime(input$pastT, data_to_plot),
+                  goaltime(input$goalT, data_to_plot),
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+            
+          }
         }
-        
       }
-      
-    }
+    }  
     else {
       if (input$Country == "-") {
-        if (is.numeric(input$Age)){
-
-##################### Inputs : AGE + GENDER ########################
-          
-          data_to_plot <-
-            demographics_filter(data = data_all,
-                                age = input$Age,
-                                gender = Gender())
-          
-          data_to_plot <-
-            rbind(
-              pasttime(input$pastT, data_to_plot),
-              goaltime(input$goalT, data_to_plot),
-              top10percentmean(data_to_plot),
-              bottom20percentmean(data_to_plot)
-            )
-          
-          ggplot(data = data_to_plot,
-                 aes(
-                   x = milestone_km,
-                   y = mean_time,
-                   color = Label
-                 )) +
-            geom_point() +
-            geom_smooth() +
-            labs(x = "Distance run", y = "Time since departure")
+        if (is.numeric(input$Age)) {
+          if (input$question_past == FALSE) {
+            if (input$question_goal == FALSE) {
+              
+              ##################### Inputs : GENDER + AGE ########################
+              
+              data_to_plot <-
+                demographics_filter(data = data_all, age = input$Age, gender = Gender())
+              
+              data_to_plot <-
+                rbind(
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+            else{
+              
+              ##################### Inputs : GENDER + AGE + GOAL TIME ########################
+              
+              data_to_plot <-
+                demographics_filter(data = data_all, age = input$Age, gender = Gender())
+              
+              data_to_plot <-
+                rbind(
+                  goaltime(input$goalT, data_to_plot),
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+            
+          }
+          else {
+            if (input$question_goal == FALSE) {
+              
+              ##################### Inputs : GENDER + AGE + PAST TIME ########################
+              
+              data_to_plot <-
+                demographics_filter(data = data_all, age = input$Age, gender = Gender())
+              
+              data_to_plot <-
+                rbind(
+                  pasttime(input$pastT, data_to_plot),
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+            else{
+              
+              ##################### Inputs : GENDER + AGE + GOAL TIME + PAST TIME ########################
+              
+              data_to_plot <- 
+                demographics_filter(data = data_all, age = input$Age, gender = Gender())
+              
+              data_to_plot <-
+                rbind(
+                  pasttime(input$pastT, data_to_plot),
+                  goaltime(input$goalT, data_to_plot),
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+            
+          }
         }
         else{
-          
-##################### Inputs : GENDER ########################
-          
-          data_to_plot <-
-            demographics_filter(data = data_all,
-                                gender = Gender())
-          
-          data_to_plot <-
-            rbind(
-              pasttime(input$pastT, data_to_plot),
-              goaltime(input$goalT, data_to_plot),
-              top10percentmean(data_to_plot),
-              bottom20percentmean(data_to_plot)
-            )
-          
-          ggplot(data = data_to_plot,
-                 aes(
-                   x = milestone_km,
-                   y = mean_time,
-                   color = Label
-                 )) +
-            geom_point() +
-            geom_smooth() +
-            labs(x = "Distance run", y = "Time since departure")
+          if (input$question_past == FALSE) {
+            if (input$question_goal == FALSE) {
+              
+              ##################### Inputs : GENDER ########################
+              
+              data_to_plot <-
+                demographics_filter(data = data_all, gender = Gender())
+              
+              data_to_plot <-
+                rbind(
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+            else{
+              
+              ##################### Inputs : GENDER + GOAL TIME ########################
+              
+              data_to_plot <-
+                demographics_filter(data = data_all, gender = Gender())
+              
+              data_to_plot <-
+                rbind(
+                  goaltime(input$goalT, data_to_plot),
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+          }
+          else {
+            if (input$question_goal == FALSE) {
+              ##################### Inputs : GENDER + PAST TIME ########################
+              
+              data_to_plot <-
+                demographics_filter(data = data_all, gender = Gender())
+              
+              data_to_plot <-
+                rbind(
+                  pasttime(input$pastT, data_to_plot),
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+            else{
+              ##################### Inputs : GENDER + GOAL TIME + PAST TIME ########################
+              
+              data_to_plot <- 
+                demographics_filter(data = data_all, gender = Gender())
+              
+              data_to_plot <-
+                rbind(
+                  pasttime(input$pastT, data_to_plot),
+                  goaltime(input$goalT, data_to_plot),
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+            
+          }
         }
-        
       }
       else {
-        if (is.numeric(input$Age)){
-          
-##################### Inputs : AGE + GENDER + COUNTRY ########################          
-          
-          data_to_plot <-
-            demographics_filter(
-              data = data_all,
-              age = input$Age,
-              gender = Gender(),
-              nationality = input$Country
-            )
-          
-          data_to_plot <-
-            rbind(
-              pasttime(input$pastT, data_to_plot),
-              goaltime(input$goalT, data_to_plot),
-              top10percentmean(data_to_plot),
-              bottom20percentmean(data_to_plot)
-            )
-          
-          ggplot(data = data_to_plot,
-                 aes(
-                   x = milestone_km,
-                   y = mean_time,
-                   color = Label
-                 )) +
-            geom_point() +
-            geom_smooth() +
-            labs(x = "Distance run", y = "Time since departure")
+        if (is.numeric(input$Age)) {
+          if (input$question_past == FALSE) {
+            if (input$question_goal == FALSE) {
+              
+              ##################### Inputs : GENDER + COUNTRY + AGE ########################
+              
+              data_to_plot <-
+                demographics_filter(data = data_all, age = input$Age, nationality = input$Country, gender = Gender())
+              
+              data_to_plot <-
+                rbind(
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+            else{
+              
+              ##################### Inputs : GENDER + COUNTRY + AGE + GOAL TIME ########################
+              
+              data_to_plot <-
+                demographics_filter(data = data_all, age = input$Age, nationality = input$Country, gender = Gender())
+              
+              data_to_plot <-
+                rbind(
+                  goaltime(input$goalT, data_to_plot),
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+            
+          }
+          else {
+            if (input$question_goal == FALSE) {
+              
+              ##################### Inputs : GENDER + COUNTRY + AGE + PAST TIME ########################
+              
+              data_to_plot <-
+                demographics_filter(data = data_all, age = input$Age, nationality = input$Country, gender = Gender())
+              
+              data_to_plot <-
+                rbind(
+                  pasttime(input$pastT, data_to_plot),
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+            else{
+              
+              ##################### Inputs : GENDER + COUNTRY + AGE + GOAL TIME + PAST TIME ########################
+              
+              data_to_plot <- 
+                demographics_filter(data = data_all, age = input$Age, nationality = input$Country, gender = Gender())
+              
+              data_to_plot <-
+                rbind(
+                  pasttime(input$pastT, data_to_plot),
+                  goaltime(input$goalT, data_to_plot),
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+            
+          }
         }
         else{
-          
-##################### Inputs : COUNTRY + GENDER ########################        
-          
-          data_to_plot <-
-            demographics_filter(
-              data = data_all,
-              gender = Gender(),
-              nationality = input$Country
-            )
-          
-          data_to_plot <-
-            rbind(
-              pasttime(input$pastT, data_to_plot),
-              goaltime(input$goalT, data_to_plot),
-              top10percentmean(data_to_plot),
-              bottom20percentmean(data_to_plot)
-            )
-          
-          ggplot(data = data_to_plot,
-                 aes(
-                   x = milestone_km,
-                   y = mean_time,
-                   color = Label
-                 )) +
-            geom_point() +
-            geom_smooth() +
-            labs(x = "Distance run", y = "Time since departure")
+          if (input$question_past == FALSE) {
+            if (input$question_goal == FALSE) {
+              
+              ##################### Inputs : GENDER + COUNTRY ########################
+              
+              data_to_plot <-
+                demographics_filter(data = data_all, nationality = input$Country, gender = Gender())
+              
+              data_to_plot <-
+                rbind(
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+            else{
+              
+              ##################### Inputs : GENDER + COUNTRY + GOAL TIME ########################
+              
+              data_to_plot <- 
+                demographics_filter(data = data_all, nationality = input$Country, gender = Gender())
+              
+              data_to_plot <-
+                rbind(
+                  goaltime(input$goalT, data_to_plot),
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+          }
+          else {
+            if (input$question_goal == FALSE) {
+              ##################### Inputs : GENDER + COUNTRY + PAST TIME ########################
+              
+              data_to_plot <-
+                demographics_filter(data = data_all, nationality = input$Country, gender = Gender())
+              
+              data_to_plot <-
+                rbind(
+                  pasttime(input$pastT, data_to_plot),
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+            else{
+              ##################### Inputs : GENDER + COUNTRY + GOAL TIME + PAST TIME ########################
+              
+              data_to_plot <- 
+                demographics_filter(data = data_all, nationality = input$Country, gender = Gender())
+              
+              data_to_plot <-
+                rbind(
+                  pasttime(input$pastT, data_to_plot),
+                  goaltime(input$goalT, data_to_plot),
+                  top10percentmean(data_to_plot),
+                  bottom20percentmean(data_to_plot)
+                )
+              
+              ggplot(data = data_to_plot,
+                     aes(
+                       x = milestone_km,
+                       y = mean_time,
+                       color = Label
+                     )) +
+                geom_point() +
+                geom_smooth() +
+                labs(x = "Distance run", y = "Time since departure")
+            }
+            
+          }
         }
-        
       }
-      
-      
-    }
+    } 
     
     
   })
