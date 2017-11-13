@@ -20,6 +20,8 @@ duration_mins_15 <- data15_1[, c(11:19, 22)] %>% lapply(function(X) {
 })
 data15_1 <- c(data15_1, duration_mins_15)
 
+View(data_all)
+
 
 
 data16[, c(11:19, 22)] <- data16[, c(11:19, 22)] %>% lapply(times)
