@@ -460,7 +460,8 @@ server <- function(input, output) {
          "The faster runner in 2016 completed the Boston marathon in 132.75 min!",
          "The faster runner in 2017 completed the Boston marathon in 129.6167 min!",
          "On average, women take 20.7 minutes more to complete the marathon",
-         "The mode age is 45. The Boston Marathon is for people going through a mid-life crisis, huh?"
+         "The mode age is 45. The Boston Marathon is for people going through a mid-life crisis, huh?",
+         "In 2016, it took a man more than 8 hours (505.15 min) to complete the race. All that matters is crossing that finish line!"
          
          
     

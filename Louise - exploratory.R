@@ -36,7 +36,7 @@ youngest_2017<- d2017 %>% filter(Age <= q1_2017)
 #combination
 #youngest <- combine(youngest_2015, youngest_2016, youngest_2017)
 youngest2 <- bind_rows(youngest_2015, youngest_2016, youngest_2017)
-summary(yousummngest)
+summary(youngest2)
 
 
 #test
@@ -56,14 +56,26 @@ countries_mix <- c(levels(d2015$Country), levels(d2016$Country), levels(d2017$Co
 countries_u <- unique(countries_mix)
 class(levels(d2015$Country))
 
-devtools::install_github("ruoyzhang/FunctionsForCyCy")
+#devtools::install_github("ruoyzhang/FunctionsForCyCy")
 
 try <- demographics_filter(data = data_all, age = 33)
 
-try <- rbind(pasttime(350, try), goaltime(300, try),
-                      top10percentmean(try),bottom20percentmean(try))
+#try <- rbind(pasttime(350, try), goaltime(300, try),
+#                      top10percentmean(try),bottom20percentmean(try))
 
 try <- goaltime(300, try)
-try %>% filter(try$Label == "Goal_time_0to15_mins_Faster") %>% select(mean_time, milestone_km)
+try <- try %>% filter(try$Label == "Goal_time_0to15_mins_Faster") %>% select(mean_time, milestone_km)
 
 View(try)
+
+countries_u <- unique(levels(data_all$Country))
+
+data_FRA <- data_all %>% filter(Country == "FRA")
+
+data_F <- data_all %>% filter(M.F == "F")
+data_M <- data_all %>% filter(M.F == "M")
+
+ggplot(data = data_all, aes(x = Age)) + geom_bar()
+
+av_country <- data_all %>% group_by(Country) %>% summarise( av_time = mean(Official.Time.1))
+
