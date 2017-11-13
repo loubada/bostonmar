@@ -46,3 +46,14 @@ duration_mins_17 <- data17_1[, c(11:19, 22)] %>% lapply(function(X) {
 })
 data17_1 <- c(data17_1, duration_mins_17)
 
+
+
+data15_1 <- as.data.frame(data15_1)[ ,-c(1)]
+data17_1 <- as.data.frame(data17_1)[ ,-c(1)]
+
+data15_1 <- as.data.frame(data15_1)[ ,-c(9:18, 20,21)]
+data16_1 <- as.data.frame(data16_1)[ ,-c(9:18, 20,21)]
+data17_1 <- as.data.frame(data17_1)[ ,-c(9:18, 20,21)]
+
+data_all <- rbind(data15_1,data16_1,data17_1)
+saveRDS(data_all, "data_all.rds")
