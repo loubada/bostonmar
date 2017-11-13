@@ -34,7 +34,7 @@ ui <- fluidPage(
 
 ###########################################################        SIDEBAR      ###########################################################
 
-###########################################################         INPUTS 
+######################### Inputs #########################
     
   sidebarLayout(
     sidebarPanel(
@@ -82,6 +82,11 @@ ui <- fluidPage(
         max = 520,
         value = 520
       ),
+      
+
+######################### Conditional Panel #########################      
+      
+
       conditionalPanel(
         condition = "input.goalT > 390 ",
         h6 ("Warning: You have to finish in less than 6h30 if you want to receive your medal ")
@@ -106,9 +111,12 @@ ui <- fluidPage(
       
     ),
 
-###### MAIN
-## OUTPUTS     
+
+###########################################################        MAIN      ###########################################################
+
+######################### Outputs #########################      
         
+
     mainPanel(tabsetPanel(
       tabPanel("Compare yourself to others", plotOutput("av_plot")),
       tabPanel("Your goal time splits", 
@@ -161,6 +169,9 @@ server <- function(input, output) {
     if (is.null(Gender())) {
       if (input$Country == "-") {
         if (is.numeric(input$Age)) {
+          
+##################### Inputs : AGE ########################
+          
           data_to_plot <-
             demographics_filter(data = data_all, age = input$Age)
           
@@ -183,6 +194,9 @@ server <- function(input, output) {
             labs(x = "Distance run", y = "Time since departure")
         }
         else{
+          
+##################### Inputs : NULL ########################
+          
           data_to_plot <- data_all
           
           data_to_plot <-
@@ -207,6 +221,9 @@ server <- function(input, output) {
       }
       else {
         if (is.numeric(input$Age)){
+          
+##################### Inputs : AGE + COUNTRY ########################
+          
           data_to_plot <-
             demographics_filter(
               data = data_all,
@@ -233,6 +250,9 @@ server <- function(input, output) {
             labs(x = "Distance run", y = "Time since departure")
         }
         else{
+          
+##################### Inputs : COUNTRY ########################
+          
           data_to_plot <-
             demographics_filter(
               data = data_all,
@@ -264,6 +284,9 @@ server <- function(input, output) {
     else {
       if (input$Country == "-") {
         if (is.numeric(input$Age)){
+
+##################### Inputs : AGE + GENDER ########################
+          
           data_to_plot <-
             demographics_filter(data = data_all,
                                 age = input$Age,
@@ -288,6 +311,9 @@ server <- function(input, output) {
             labs(x = "Distance run", y = "Time since departure")
         }
         else{
+          
+##################### Inputs : GENDER ########################
+          
           data_to_plot <-
             demographics_filter(data = data_all,
                                 gender = Gender())
@@ -314,6 +340,9 @@ server <- function(input, output) {
       }
       else {
         if (is.numeric(input$Age)){
+          
+##################### Inputs : AGE + GENDER + COUNTRY ########################          
+          
           data_to_plot <-
             demographics_filter(
               data = data_all,
@@ -341,6 +370,9 @@ server <- function(input, output) {
             labs(x = "Distance run", y = "Time since departure")
         }
         else{
+          
+##################### Inputs : COUNTRY + GENDER ########################        
+          
           data_to_plot <-
             demographics_filter(
               data = data_all,
@@ -383,11 +415,17 @@ server <- function(input, output) {
     if (is.null(Gender())) {
       if (input$Country == "-") {
         if (is.numeric(input$Age)){
+          
+##################### Inputs : AGE ########################        
+          
           dt <- demographics_filter(data = data_all, age = input$Age)
           dt <-  goaltime(input$goalT, dt)
           dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(milestone_km, mean_time) %>% rename(Milestone = milestone_km, Goal = mean_time)
         }
         else{
+          
+##################### Inputs : NULL #######################
+          
           dt <- data_all
           dt <-  goaltime(input$goalT, dt)
           dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(milestone_km, mean_time) %>% rename(Milestone = milestone_km, Goal = mean_time)
@@ -396,6 +434,9 @@ server <- function(input, output) {
       }
       else{
         if (is.numeric(input$Age)){
+          
+################# Inputs : AGE + COUNTRY ##################
+        
           dt <-
             demographics_filter(
               data = data_all,
@@ -406,6 +447,9 @@ server <- function(input, output) {
           dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(milestone_km, mean_time) %>% rename(Milestone = milestone_km, Goal = mean_time)
         }
         else{
+          
+################### Inputs : COUNTRY ######################
+          
           dt <-
             demographics_filter(
               data = data_all,
@@ -421,6 +465,9 @@ server <- function(input, output) {
     else{
       if (input$Country == "-") {
         if (is.numeric(input$Age)){
+          
+################## Inputs : AGE + GENDER #####################
+          
           dt <-
             demographics_filter(data = data_all,
                                 age = input$Age,
@@ -429,6 +476,9 @@ server <- function(input, output) {
           dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(milestone_km, mean_time) %>% rename(Milestone = milestone_km, Goal = mean_time)
         }
         else{
+          
+#################### Inputs : GENDER #########################
+          
           dt <-
             demographics_filter(data = data_all,
                                 gender = Gender())
@@ -439,6 +489,9 @@ server <- function(input, output) {
       }
       else{
         if (is.numeric(input$Age)){
+          
+#########@## Inputs : AGE + GENDER + COUNTRY ###############          
+          
           dt <-
             demographics_filter(
               data = data_all,
@@ -450,6 +503,9 @@ server <- function(input, output) {
           dt %>% filter(dt$Label == "Goal_time_0to15_mins_Faster") %>% select(milestone_km, mean_time) %>% rename(Milestone = milestone_km, Goal = mean_time)
         }
         else{
+          
+############### Inputs : COUNTRY + GENDER ##################
+          
           dt <-
             demographics_filter(
               data = data_all,
