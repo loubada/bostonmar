@@ -31,8 +31,10 @@ ui <- fluidPage(
   
   br(),
 
-###### SIDEBAR
-## INPUTS 
+
+###########################################################        SIDEBAR      ###########################################################
+
+###########################################################         INPUTS 
     
   sidebarLayout(
     sidebarPanel(
@@ -78,7 +80,7 @@ ui <- fluidPage(
         label = h5("Goal Time : "),
         min = 120,
         max = 520,
-        value = 210
+        value = 520
       ),
       conditionalPanel(
         condition = "input.goalT > 390 ",
