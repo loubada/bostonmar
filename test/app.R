@@ -92,15 +92,15 @@ ui <- fluidPage(
       
 
       conditionalPanel(
-        condition = c("input.question_goal == true", "input.goalT >= 390 "),
+        condition = "input.question_goal == true && input.goalT >= 390 ",
         h6 ("Warning: You have to finish in less than 6h30 if you want to receive your medal ")
       ),
       conditionalPanel(
-        condition = c("input.goalT <= 123 ", "input.question_goal == true"),
+        condition = "input.question_goal == true && input.goalT <= 123 ",
         h6 ("Impressive: You would break the record on the marathon")
       ),
       conditionalPanel(
-        condition = c("input.pastT >= input.goalT + 60", "input.question_goal == true", "input.question_past == true"),
+        condition = c("input.question_goal == true && input.question_past == true && input.pastT >= input.goalT + 60"),
         h4 ("Do you really think you can improve that much?")
       ),
       
