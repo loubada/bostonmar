@@ -3,6 +3,7 @@ library(ggplot2)
 library(shinythemes)
 library(dplyr)
 library (CyCyFns)
+library(ggthemes)
 
 ui <- fluidPage( theme = shinytheme('darkly'),
   #shinythemes::themeSelector(),`
@@ -49,7 +50,7 @@ ui <- fluidPage( theme = shinytheme('darkly'),
     
     mainPanel(
       tabsetPanel(
-        tabPanel("Compare yourself to others", plotOutput("av_plot")), 
+        tabPanel("Compare yourself to others", plotOutput("av_plot", width = "100%", height = "700px", hover = "plot_hover"), verbatimTextOutput("details")), 
         tabPanel("Your goal time splits", tableOutput("av_table")), 
         tabPanel("Yes I am!", 
                  br(),
@@ -85,6 +86,21 @@ server <- function(input, output) {
     })
     
     
+    output$details <- renderText({
+      # xy_str <- function(e) {
+      #   if(is.null(e)) return("NULL\n")
+      #   paste0("At km: ", round(e$x, 1), " The time is", round(e$y, 1), "\n")
+      # }
+
+      if(is.null(input$plot_hover)){
+        return(NULL)
+      }
+      else{
+        paste("At ", round(input$plot_hover$x, digits = 2) , " km, time is", round(input$plot_hover$y), " min")
+      }
+      
+    })
+    
     output$av_plot <- renderPlot({
       
       if (is.null(Gender())){
@@ -98,7 +114,9 @@ server <- function(input, output) {
                  aes(x = milestone_km, y = mean_time, color = Label)) +
             geom_point() +
             geom_line() +
-            labs(x = "Distance run", y = "Time since departure") 
+            labs(x = "Distance run", y = "Time since departure") + 
+            theme_hc(bgcolor = "darkunica") +
+            scale_colour_hc("darkunica")
         }
         else {
           data_to_plot <- demographics_filter(data = data_all, age = input$Age, nationality = input$Country)
@@ -115,6 +133,9 @@ server <- function(input, output) {
         
       }
       else {
+        
+        ####################################################################################################################################
+        
         if (input$Country == "-"){
           data_to_plot <- demographics_filter(data = data_all, age = input$Age, gender = Gender())
           
@@ -125,7 +146,11 @@ server <- function(input, output) {
                  aes(x = milestone_km, y = mean_time, color = Label)) +
             geom_point() +
             geom_line() +
-            labs(x = "Distance run", y = "Time since departure") 
+            labs(x = "Distance run", y = "Time since departure")+ 
+            theme_hc(bgcolor = "darkunica") +
+            scale_colour_hc("darkunica") + 
+            ylim(0, 400)
+
         }
         else {
           data_to_plot <- demographics_filter(data = data_all, age = input$Age, gender = Gender(), nationality = input$Country)
