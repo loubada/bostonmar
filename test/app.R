@@ -5,6 +5,7 @@ library(ggplot2)
 library(shinythemes)
 library(dplyr)
 library (CyCyFns)
+library(ggthemes)
 
 
 
@@ -18,8 +19,6 @@ library (CyCyFns)
 
 ui <- fluidPage(
   theme = shinytheme('darkly'),
-  #shinythemes::themeSelector(),`
-  #push again`
   
   h1("Prep for the next Boston Marathon!"),
   
@@ -122,7 +121,9 @@ ui <- fluidPage(
         
 
     mainPanel(tabsetPanel(
-      tabPanel("Compare yourself to others", plotOutput("av_plot")),
+      tabPanel("Compare yourself to others", 
+               plotOutput("av_plot", width = "100%", height = "700px", hover = "plot_hover"),
+               verbatimTextOutput("details")),
       tabPanel("Your goal time splits", 
                tableOutput('av_table'),
                br(),
@@ -195,7 +196,10 @@ server <- function(input, output) {
                  )) +
             geom_point() +
             geom_smooth() +
-            labs(x = "Distance run", y = "Time since departure")
+            labs(x = "Distance run", y = "Time since departure")+ 
+            theme_hc(bgcolor = "darkunica") +
+            scale_colour_hc("darkunica") + 
+            ylim(0, 400)
               }
               else{
           
@@ -219,14 +223,17 @@ server <- function(input, output) {
                  )) +
             geom_point() +
             geom_smooth() +
-            labs(x = "Distance run", y = "Time since departure")
+            labs(x = "Distance run", y = "Time since departure")+ 
+            theme_hc(bgcolor = "darkunica") +
+            scale_colour_hc("darkunica") + 
+            ylim(0, 400)
               }
         
             }
           else {
           if (input$question_goal == FALSE) {
           
-          ##################### Inputs : AGE + PAST TIME ########################
+##################### Inputs : AGE + PAST TIME ########################
           
           data_to_plot <-
             demographics_filter(data = data_all, age = input$Age)
@@ -246,11 +253,14 @@ server <- function(input, output) {
                  )) +
             geom_point() +
             geom_smooth() +
-            labs(x = "Distance run", y = "Time since departure")
+            labs(x = "Distance run", y = "Time since departure")+ 
+            theme_hc(bgcolor = "darkunica") +
+            scale_colour_hc("darkunica") + 
+            ylim(0, 400)
         }
           else{
           
-          ##################### Inputs : AGE + GOAL TIME + PAST TIME ########################
+##################### Inputs : AGE + GOAL TIME + PAST TIME ########################
           
           data_to_plot <- demographics_filter(data = data_all, age = input$Age)
           
@@ -270,7 +280,10 @@ server <- function(input, output) {
                  )) +
             geom_point() +
             geom_smooth() +
-            labs(x = "Distance run", y = "Time since departure")
+            labs(x = "Distance run", y = "Time since departure")+ 
+            theme_hc(bgcolor = "darkunica") +
+            scale_colour_hc("darkunica") + 
+            ylim(0, 400)
         }
         
           }
@@ -279,7 +292,7 @@ server <- function(input, output) {
             if (input$question_past == FALSE) {
               if (input$question_goal == FALSE) {
                 
-                ##################### Inputs : NOTHING ########################
+##################### Inputs : NOTHING ########################
                 
                 data_to_plot <-
                   demographics_filter(data = data_all)
@@ -298,11 +311,14 @@ server <- function(input, output) {
                        )) +
                   geom_point() +
                   geom_smooth() +
-                  labs(x = "Distance run", y = "Time since departure")
+                  labs(x = "Distance run", y = "Time since departure")+ 
+                  theme_hc(bgcolor = "darkunica") +
+                  scale_colour_hc("darkunica") + 
+                  ylim(0, 400)
               }
               else{
                 
-                ##################### Inputs : GOAL TIME ########################
+##################### Inputs : GOAL TIME ########################
                 
                 data_to_plot <- data_all
                 
@@ -321,12 +337,16 @@ server <- function(input, output) {
                        )) +
                   geom_point() +
                   geom_smooth() +
-                  labs(x = "Distance run", y = "Time since departure")
+                  labs(x = "Distance run", y = "Time since departure")+ 
+                  theme_hc(bgcolor = "darkunica") +
+                  scale_colour_hc("darkunica") + 
+                  ylim(0, 400)
               }
             }
             else {
               if (input$question_goal == FALSE) {
-                ##################### Inputs : PAST TIME ########################
+                
+##################### Inputs : PAST TIME ########################
                 
                 data_to_plot <-
                   demographics_filter(data = data_all)
@@ -346,10 +366,14 @@ server <- function(input, output) {
                        )) +
                   geom_point() +
                   geom_smooth() +
-                  labs(x = "Distance run", y = "Time since departure")
+                  labs(x = "Distance run", y = "Time since departure")+ 
+                  theme_hc(bgcolor = "darkunica") +
+                  scale_colour_hc("darkunica") + 
+                  ylim(0, 400)
               }
               else{
-                ##################### Inputs : GOAL TIME + PAST TIME ########################
+                
+##################### Inputs : GOAL TIME + PAST TIME ########################
                 
                 data_to_plot <- data_all
                 
@@ -369,7 +393,10 @@ server <- function(input, output) {
                        )) +
                   geom_point() +
                   geom_smooth() +
-                  labs(x = "Distance run", y = "Time since departure")
+                  labs(x = "Distance run", y = "Time since departure")+ 
+                  theme_hc(bgcolor = "darkunica") +
+                  scale_colour_hc("darkunica") + 
+                  ylim(0, 400)
               }
               
             }
@@ -380,7 +407,7 @@ server <- function(input, output) {
           if (input$question_past == FALSE) {
             if (input$question_goal == FALSE) {
               
-              ##################### Inputs : COUNTRY + AGE ########################
+##################### Inputs : COUNTRY + AGE ########################
               
               data_to_plot <-
                 demographics_filter(data = data_all, age = input$Age, nationality = input$Country)
@@ -399,11 +426,14 @@ server <- function(input, output) {
                      )) +
                 geom_point() +
                 geom_smooth() +
-                labs(x = "Distance run", y = "Time since departure")
+                labs(x = "Distance run", y = "Time since departure")+ 
+                theme_hc(bgcolor = "darkunica") +
+                scale_colour_hc("darkunica") + 
+                ylim(0, 400)
             }
             else{
               
-              ##################### Inputs : COUNTRY + AGE + GOAL TIME ########################
+##################### Inputs : COUNTRY + AGE + GOAL TIME ########################
               
               data_to_plot <-
                 demographics_filter(data = data_all, age = input$Age, nationality = input$Country)
@@ -423,14 +453,17 @@ server <- function(input, output) {
                      )) +
                 geom_point() +
                 geom_smooth() +
-                labs(x = "Distance run", y = "Time since departure")
+                labs(x = "Distance run", y = "Time since departure")+ 
+                theme_hc(bgcolor = "darkunica") +
+                scale_colour_hc("darkunica") + 
+                ylim(0, 400)
             }
             
           }
           else {
             if (input$question_goal == FALSE) {
               
-              ##################### Inputs : COUNTRY + AGE + PAST TIME ########################
+##################### Inputs : COUNTRY + AGE + PAST TIME ########################
               
               data_to_plot <-
                 demographics_filter(data = data_all, age = input$Age, nationality = input$Country)
@@ -450,11 +483,14 @@ server <- function(input, output) {
                      )) +
                 geom_point() +
                 geom_smooth() +
-                labs(x = "Distance run", y = "Time since departure")
+                labs(x = "Distance run", y = "Time since departure")+ 
+                theme_hc(bgcolor = "darkunica") +
+                scale_colour_hc("darkunica") + 
+                ylim(0, 400)
             }
             else{
               
-              ##################### Inputs : COUNTRY + AGE + GOAL TIME + PAST TIME ########################
+##################### Inputs : COUNTRY + AGE + GOAL TIME + PAST TIME ########################
               
               data_to_plot <- demographics_filter(data = data_all, age = input$Age, nationality = input$Country)
               
@@ -474,7 +510,10 @@ server <- function(input, output) {
                      )) +
                 geom_point() +
                 geom_smooth() +
-                labs(x = "Distance run", y = "Time since departure")
+                labs(x = "Distance run", y = "Time since departure")+ 
+                theme_hc(bgcolor = "darkunica") +
+                scale_colour_hc("darkunica") + 
+                ylim(0, 400)
             }
             
           }
@@ -483,7 +522,7 @@ server <- function(input, output) {
           if (input$question_past == FALSE) {
             if (input$question_goal == FALSE) {
               
-              ##################### Inputs : COUNTRY ########################
+##################### Inputs : COUNTRY ########################
               
               data_to_plot <-
                 demographics_filter(data = data_all, nationality = input$Country)
@@ -502,11 +541,14 @@ server <- function(input, output) {
                      )) +
                 geom_point() +
                 geom_smooth() +
-                labs(x = "Distance run", y = "Time since departure")
+                labs(x = "Distance run", y = "Time since departure")+ 
+                theme_hc(bgcolor = "darkunica") +
+                scale_colour_hc("darkunica") + 
+                ylim(0, 400)
             }
             else{
               
-              ##################### Inputs : COUNTRY + GOAL TIME ########################
+##################### Inputs : COUNTRY + GOAL TIME ########################
               
               data_to_plot <- 
                 demographics_filter(data = data_all, nationality = input$Country)
@@ -526,12 +568,16 @@ server <- function(input, output) {
                      )) +
                 geom_point() +
                 geom_smooth() +
-                labs(x = "Distance run", y = "Time since departure")
+                labs(x = "Distance run", y = "Time since departure")+ 
+                theme_hc(bgcolor = "darkunica") +
+                scale_colour_hc("darkunica") + 
+                ylim(0, 400)
             }
           }
           else {
             if (input$question_goal == FALSE) {
-              ##################### Inputs : COUNTRY + PAST TIME ########################
+              
+##################### Inputs : COUNTRY + PAST TIME ########################
               
               data_to_plot <-
                 demographics_filter(data = data_all, nationality = input$Country)
@@ -551,10 +597,14 @@ server <- function(input, output) {
                      )) +
                 geom_point() +
                 geom_smooth() +
-                labs(x = "Distance run", y = "Time since departure")
+                labs(x = "Distance run", y = "Time since departure")+ 
+                theme_hc(bgcolor = "darkunica") +
+                scale_colour_hc("darkunica") + 
+                ylim(0, 400)
             }
             else{
-              ##################### Inputs : COUNTRY + GOAL TIME + PAST TIME ########################
+              
+##################### Inputs : COUNTRY + GOAL TIME + PAST TIME ########################
               
               data_to_plot <- 
                 demographics_filter(data = data_all, nationality = input$Country)
@@ -575,7 +625,10 @@ server <- function(input, output) {
                      )) +
                 geom_point() +
                 geom_smooth() +
-                labs(x = "Distance run", y = "Time since departure")
+                labs(x = "Distance run", y = "Time since departure")+ 
+                theme_hc(bgcolor = "darkunica") +
+                scale_colour_hc("darkunica") + 
+                ylim(0, 400)
             }
             
           }
@@ -588,7 +641,7 @@ server <- function(input, output) {
           if (input$question_past == FALSE) {
             if (input$question_goal == FALSE) {
               
-              ##################### Inputs : GENDER + AGE ########################
+##################### Inputs : GENDER + AGE ########################
               
               data_to_plot <-
                 demographics_filter(data = data_all, age = input$Age, gender = Gender())
@@ -607,11 +660,14 @@ server <- function(input, output) {
                      )) +
                 geom_point() +
                 geom_smooth() +
-                labs(x = "Distance run", y = "Time since departure")
+                labs(x = "Distance run", y = "Time since departure")+ 
+                theme_hc(bgcolor = "darkunica") +
+                scale_colour_hc("darkunica") + 
+                ylim(0, 400)
             }
             else{
               
-              ##################### Inputs : GENDER + AGE + GOAL TIME ########################
+##################### Inputs : GENDER + AGE + GOAL TIME ########################
               
               data_to_plot <-
                 demographics_filter(data = data_all, age = input$Age, gender = Gender())
@@ -631,14 +687,17 @@ server <- function(input, output) {
                      )) +
                 geom_point() +
                 geom_smooth() +
-                labs(x = "Distance run", y = "Time since departure")
+                labs(x = "Distance run", y = "Time since departure")+ 
+                theme_hc(bgcolor = "darkunica") +
+                scale_colour_hc("darkunica") + 
+                ylim(0, 400)
             }
             
           }
           else {
             if (input$question_goal == FALSE) {
               
-              ##################### Inputs : GENDER + AGE + PAST TIME ########################
+##################### Inputs : GENDER + AGE + PAST TIME ########################
               
               data_to_plot <-
                 demographics_filter(data = data_all, age = input$Age, gender = Gender())
@@ -658,11 +717,14 @@ server <- function(input, output) {
                      )) +
                 geom_point() +
                 geom_smooth() +
-                labs(x = "Distance run", y = "Time since departure")
+                labs(x = "Distance run", y = "Time since departure")+ 
+                theme_hc(bgcolor = "darkunica") +
+                scale_colour_hc("darkunica") + 
+                ylim(0, 400)
             }
             else{
               
-              ##################### Inputs : GENDER + AGE + GOAL TIME + PAST TIME ########################
+##################### Inputs : GENDER + AGE + GOAL TIME + PAST TIME ########################
               
               data_to_plot <- 
                 demographics_filter(data = data_all, age = input$Age, gender = Gender())
@@ -683,7 +745,10 @@ server <- function(input, output) {
                      )) +
                 geom_point() +
                 geom_smooth() +
-                labs(x = "Distance run", y = "Time since departure")
+                labs(x = "Distance run", y = "Time since departure")+ 
+                theme_hc(bgcolor = "darkunica") +
+                scale_colour_hc("darkunica") + 
+                ylim(0, 400)
             }
             
           }
@@ -692,7 +757,7 @@ server <- function(input, output) {
           if (input$question_past == FALSE) {
             if (input$question_goal == FALSE) {
               
-              ##################### Inputs : GENDER ########################
+##################### Inputs : GENDER ########################
               
               data_to_plot <-
                 demographics_filter(data = data_all, gender = Gender())
@@ -711,11 +776,14 @@ server <- function(input, output) {
                      )) +
                 geom_point() +
                 geom_smooth() +
-                labs(x = "Distance run", y = "Time since departure")
+                labs(x = "Distance run", y = "Time since departure")+ 
+                theme_hc(bgcolor = "darkunica") +
+                scale_colour_hc("darkunica") + 
+                ylim(0, 400)
             }
             else{
               
-              ##################### Inputs : GENDER + GOAL TIME ########################
+##################### Inputs : GENDER + GOAL TIME ########################
               
               data_to_plot <-
                 demographics_filter(data = data_all, gender = Gender())
@@ -740,7 +808,8 @@ server <- function(input, output) {
           }
           else {
             if (input$question_goal == FALSE) {
-              ##################### Inputs : GENDER + PAST TIME ########################
+
+##################### Inputs : GENDER + PAST TIME ########################
               
               data_to_plot <-
                 demographics_filter(data = data_all, gender = Gender())
@@ -760,10 +829,13 @@ server <- function(input, output) {
                      )) +
                 geom_point() +
                 geom_smooth() +
-                labs(x = "Distance run", y = "Time since departure")
+                labs(x = "Distance run", y = "Time since departure")+ 
+                theme_hc(bgcolor = "darkunica") +
+                scale_colour_hc("darkunica") + 
+                ylim(0, 400)
             }
             else{
-              ##################### Inputs : GENDER + GOAL TIME + PAST TIME ########################
+##################### Inputs : GENDER + GOAL TIME + PAST TIME ########################
               
               data_to_plot <- 
                 demographics_filter(data = data_all, gender = Gender())
@@ -784,7 +856,10 @@ server <- function(input, output) {
                      )) +
                 geom_point() +
                 geom_smooth() +
-                labs(x = "Distance run", y = "Time since departure")
+                labs(x = "Distance run", y = "Time since departure")+ 
+                theme_hc(bgcolor = "darkunica") +
+                scale_colour_hc("darkunica") + 
+                ylim(0, 400)
             }
             
           }
@@ -795,7 +870,7 @@ server <- function(input, output) {
           if (input$question_past == FALSE) {
             if (input$question_goal == FALSE) {
               
-              ##################### Inputs : GENDER + COUNTRY + AGE ########################
+##################### Inputs : GENDER + COUNTRY + AGE ########################
               
               data_to_plot <-
                 demographics_filter(data = data_all, age = input$Age, nationality = input$Country, gender = Gender())
@@ -814,11 +889,15 @@ server <- function(input, output) {
                      )) +
                 geom_point() +
                 geom_smooth() +
-                labs(x = "Distance run", y = "Time since departure")
+                labs(x = "Distance run", y = "Time since departure")+ 
+                theme_hc(bgcolor = "darkunica") +
+                scale_colour_hc("darkunica") + 
+                ylim(0, 400)
+              
             }
             else{
               
-              ##################### Inputs : GENDER + COUNTRY + AGE + GOAL TIME ########################
+##################### Inputs : GENDER + COUNTRY + AGE + GOAL TIME ########################
               
               data_to_plot <-
                 demographics_filter(data = data_all, age = input$Age, nationality = input$Country, gender = Gender())
@@ -838,14 +917,17 @@ server <- function(input, output) {
                      )) +
                 geom_point() +
                 geom_smooth() +
-                labs(x = "Distance run", y = "Time since departure")
+                labs(x = "Distance run", y = "Time since departure")+ 
+                theme_hc(bgcolor = "darkunica") +
+                scale_colour_hc("darkunica") + 
+                ylim(0, 400)
             }
             
           }
           else {
             if (input$question_goal == FALSE) {
               
-              ##################### Inputs : GENDER + COUNTRY + AGE + PAST TIME ########################
+##################### Inputs : GENDER + COUNTRY + AGE + PAST TIME ########################
               
               data_to_plot <-
                 demographics_filter(data = data_all, age = input$Age, nationality = input$Country, gender = Gender())
@@ -865,11 +947,14 @@ server <- function(input, output) {
                      )) +
                 geom_point() +
                 geom_smooth() +
-                labs(x = "Distance run", y = "Time since departure")
+                labs(x = "Distance run", y = "Time since departure")+ 
+                theme_hc(bgcolor = "darkunica") +
+                scale_colour_hc("darkunica") + 
+                ylim(0, 400)
             }
             else{
               
-              ##################### Inputs : GENDER + COUNTRY + AGE + GOAL TIME + PAST TIME ########################
+##################### Inputs : GENDER + COUNTRY + AGE + GOAL TIME + PAST TIME ########################
               
               data_to_plot <- 
                 demographics_filter(data = data_all, age = input$Age, nationality = input$Country, gender = Gender())
@@ -890,7 +975,10 @@ server <- function(input, output) {
                      )) +
                 geom_point() +
                 geom_smooth() +
-                labs(x = "Distance run", y = "Time since departure")
+                labs(x = "Distance run", y = "Time since departure")+ 
+                theme_hc(bgcolor = "darkunica") +
+                scale_colour_hc("darkunica") + 
+                ylim(0, 400)
             }
             
           }
@@ -899,7 +987,7 @@ server <- function(input, output) {
           if (input$question_past == FALSE) {
             if (input$question_goal == FALSE) {
               
-              ##################### Inputs : GENDER + COUNTRY ########################
+##################### Inputs : GENDER + COUNTRY ########################
               
               data_to_plot <-
                 demographics_filter(data = data_all, nationality = input$Country, gender = Gender())
@@ -918,11 +1006,14 @@ server <- function(input, output) {
                      )) +
                 geom_point() +
                 geom_smooth() +
-                labs(x = "Distance run", y = "Time since departure")
+                labs(x = "Distance run", y = "Time since departure")+ 
+                theme_hc(bgcolor = "darkunica") +
+                scale_colour_hc("darkunica") + 
+                ylim(0, 400)
             }
             else{
               
-              ##################### Inputs : GENDER + COUNTRY + GOAL TIME ########################
+##################### Inputs : GENDER + COUNTRY + GOAL TIME ########################
               
               data_to_plot <- 
                 demographics_filter(data = data_all, nationality = input$Country, gender = Gender())
@@ -942,12 +1033,16 @@ server <- function(input, output) {
                      )) +
                 geom_point() +
                 geom_smooth() +
-                labs(x = "Distance run", y = "Time since departure")
+                labs(x = "Distance run", y = "Time since departure")+ 
+                theme_hc(bgcolor = "darkunica") +
+                scale_colour_hc("darkunica") + 
+                ylim(0, 400)
             }
           }
           else {
             if (input$question_goal == FALSE) {
-              ##################### Inputs : GENDER + COUNTRY + PAST TIME ########################
+              
+##################### Inputs : GENDER + COUNTRY + PAST TIME ########################
               
               data_to_plot <-
                 demographics_filter(data = data_all, nationality = input$Country, gender = Gender())
@@ -967,10 +1062,14 @@ server <- function(input, output) {
                      )) +
                 geom_point() +
                 geom_smooth() +
-                labs(x = "Distance run", y = "Time since departure")
+                labs(x = "Distance run", y = "Time since departure")+ 
+                theme_hc(bgcolor = "darkunica") +
+                scale_colour_hc("darkunica") + 
+                ylim(0, 400)
             }
             else{
-              ##################### Inputs : GENDER + COUNTRY + GOAL TIME + PAST TIME ########################
+              
+##################### Inputs : GENDER + COUNTRY + GOAL TIME + PAST TIME ########################
               
               data_to_plot <- 
                 demographics_filter(data = data_all, nationality = input$Country, gender = Gender())
@@ -991,7 +1090,10 @@ server <- function(input, output) {
                      )) +
                 geom_point() +
                 geom_smooth() +
-                labs(x = "Distance run", y = "Time since departure")
+                labs(x = "Distance run", y = "Time since departure")+ 
+                theme_hc(bgcolor = "darkunica") +
+                scale_colour_hc("darkunica") + 
+                ylim(0, 400)
             }
             
           }
@@ -999,6 +1101,21 @@ server <- function(input, output) {
       }
     } 
     
+    
+  })
+  
+  
+##########################################################        HOVER      ##########################################################
+  
+  
+  output$details <- renderText({
+    
+    if(is.null(input$plot_hover)){
+      return(NULL)
+    }
+    else{
+      paste("At ", round(input$plot_hover$x, digits = 2) , " km, time is", round(input$plot_hover$y), " min")
+    }
     
   })
   
@@ -1132,8 +1249,14 @@ server <- function(input, output) {
          "The faster runner in 2017 completed the Boston marathon in 129.6167 min!",
          "On average, women take 20.7 minutes more to complete the marathon",
          "The mode age is 45. The Boston Marathon is for people going through a mid-life crisis, huh?",
-         "In 2016, it took a man more than 8 hours (505.15 min) to complete the race. All that matters is crossing that finish line!"
-         
+         "In 2016, it took a man more than 8 hours (505.15 min) to complete the race. All that matters is crossing that finish line!",
+         "The most common family name is Smith",
+         "There are 18530 unique family names (out of 79037 runners across 3 years)",
+         "The most common first name is Michael",
+         "There are 13742 unique first names out of 79037 runners!",
+         "There are 4 cities called 'New Paris' in the US, and 3 runners were from the 4 New Paris",
+         "16% of the Boston runners are between the age of 45 and 49 (including), they make up the biggest age group!",
+         "There are 20 countries with only 1 participants"
          
     
   )

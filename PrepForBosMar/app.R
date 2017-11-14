@@ -146,7 +146,7 @@ server <- function(input, output) {
                  aes(x = milestone_km, y = mean_time, color = Label)) +
             geom_point() +
             geom_line() +
-            labs(x = "Distance run", y = "Time since departure")+ 
+            labs(x = "Distance run", y = "Time since departure") + 
             theme_hc(bgcolor = "darkunica") +
             scale_colour_hc("darkunica") + 
             ylim(0, 400)
