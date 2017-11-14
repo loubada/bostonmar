@@ -19,6 +19,13 @@ ui <- fluidPage( theme = shinytheme('darkly'),
   
   sidebarLayout(
     
+  # coolio <- ({data_all %>% 
+  #   group_by(data_all$Country) %>% 
+  #   summarise(number = n()) %>%
+  #   levels()}),
+  
+  #levels(arrange(summarise(groub_by(data_all, Country), number=n()), number))
+    #unique(levels(arrange(data_all, )$Country)),  
     sidebarPanel(
       h4("Demographics :"),
       numericInput(inputId = "Age", label = h5("Age : "), value = 42),
@@ -26,7 +33,7 @@ ui <- fluidPage( theme = shinytheme('darkly'),
                    choices = list("Male", "Female", "Don't care!"), 
                    selected = "Male", inline = TRUE),
       selectInput(inputId = "Country", label = h5("Country :"), 
-                  choices = c("-", countries_u), 
+                  choices = c("-", levels(arrange(summarise(group_by(data_all, Country), number=n()), number))), 
                   selected = "-"),
       
       hr(),
