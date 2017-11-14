@@ -79,3 +79,13 @@ ggplot(data = data_all, aes(x = Age)) + geom_bar()
 
 av_country <- data_all %>% group_by(Country) %>% summarise( av_time = mean(Official.Time.1))
 
+coolio <- levels(arrange(summarise(group_by(data_all, Country), number=n()), number))
+coolio <- as.character(arrange(summarise(group_by(data_all, Country), number=n()), desc(number))$Country)
+#### 
+
+
+
+
+
+
+
