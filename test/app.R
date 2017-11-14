@@ -184,6 +184,7 @@ server <- function(input, output) {
           
           data_to_plot <-
             rbind(
+              globalaverage(data_to_plot),
               top10percentmean(data_to_plot),
               bottom20percentmean(data_to_plot)
             )
@@ -210,6 +211,7 @@ server <- function(input, output) {
           
           data_to_plot <-
             rbind(
+              globalaverage(data_to_plot),
               goaltime(input$goalT, data_to_plot),
               top10percentmean(data_to_plot),
               bottom20percentmean(data_to_plot)
@@ -240,6 +242,7 @@ server <- function(input, output) {
           
           data_to_plot <-
             rbind(
+              globalaverage(data_to_plot),
               pasttime(input$pastT, data_to_plot),
               top10percentmean(data_to_plot),
               bottom20percentmean(data_to_plot)
@@ -266,6 +269,7 @@ server <- function(input, output) {
           
           data_to_plot <-
             rbind(
+              globalaverage(data_to_plot),
               pasttime(input$pastT, data_to_plot),
               goaltime(input$goalT, data_to_plot),
               top10percentmean(data_to_plot),
@@ -299,6 +303,7 @@ server <- function(input, output) {
                 
                 data_to_plot <-
                   rbind(
+                    globalaverage(data_to_plot),
                     top10percentmean(data_to_plot),
                     bottom20percentmean(data_to_plot)
                   )
@@ -324,6 +329,7 @@ server <- function(input, output) {
                 
                 data_to_plot <-
                   rbind(
+                    globalaverage(data_to_plot),
                     goaltime(input$goalT, data_to_plot),
                     top10percentmean(data_to_plot),
                     bottom20percentmean(data_to_plot)
@@ -353,6 +359,7 @@ server <- function(input, output) {
                 
                 data_to_plot <-
                   rbind(
+                    globalaverage(data_to_plot),
                     pasttime(input$pastT, data_to_plot),
                     top10percentmean(data_to_plot),
                     bottom20percentmean(data_to_plot)
@@ -379,6 +386,7 @@ server <- function(input, output) {
                 
                 data_to_plot <-
                   rbind(
+                    globalaverage(data_to_plot),
                     pasttime(input$pastT, data_to_plot),
                     goaltime(input$goalT, data_to_plot),
                     top10percentmean(data_to_plot),
@@ -414,6 +422,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   top10percentmean(data_to_plot),
                   bottom20percentmean(data_to_plot)
                 )
@@ -440,6 +449,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   goaltime(input$goalT, data_to_plot),
                   top10percentmean(data_to_plot),
                   bottom20percentmean(data_to_plot)
@@ -470,6 +480,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   pasttime(input$pastT, data_to_plot),
                   top10percentmean(data_to_plot),
                   bottom20percentmean(data_to_plot)
@@ -496,6 +507,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   pasttime(input$pastT, data_to_plot),
                   goaltime(input$goalT, data_to_plot),
                   top10percentmean(data_to_plot),
@@ -529,6 +541,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   top10percentmean(data_to_plot),
                   bottom20percentmean(data_to_plot)
                 )
@@ -555,6 +568,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   goaltime(input$goalT, data_to_plot),
                   top10percentmean(data_to_plot),
                   bottom20percentmean(data_to_plot)
@@ -584,6 +598,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   pasttime(input$pastT, data_to_plot),
                   top10percentmean(data_to_plot),
                   bottom20percentmean(data_to_plot)
@@ -611,6 +626,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   pasttime(input$pastT, data_to_plot),
                   goaltime(input$goalT, data_to_plot),
                   top10percentmean(data_to_plot),
@@ -648,6 +664,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   top10percentmean(data_to_plot),
                   bottom20percentmean(data_to_plot)
                 )
@@ -674,6 +691,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   goaltime(input$goalT, data_to_plot),
                   top10percentmean(data_to_plot),
                   bottom20percentmean(data_to_plot)
@@ -704,6 +722,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   pasttime(input$pastT, data_to_plot),
                   top10percentmean(data_to_plot),
                   bottom20percentmean(data_to_plot)
@@ -731,6 +750,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   pasttime(input$pastT, data_to_plot),
                   goaltime(input$goalT, data_to_plot),
                   top10percentmean(data_to_plot),
@@ -764,6 +784,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   top10percentmean(data_to_plot),
                   bottom20percentmean(data_to_plot)
                 )
@@ -790,6 +811,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   goaltime(input$goalT, data_to_plot),
                   top10percentmean(data_to_plot),
                   bottom20percentmean(data_to_plot)
@@ -816,6 +838,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   pasttime(input$pastT, data_to_plot),
                   top10percentmean(data_to_plot),
                   bottom20percentmean(data_to_plot)
@@ -842,6 +865,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   pasttime(input$pastT, data_to_plot),
                   goaltime(input$goalT, data_to_plot),
                   top10percentmean(data_to_plot),
@@ -877,6 +901,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   top10percentmean(data_to_plot),
                   bottom20percentmean(data_to_plot)
                 )
@@ -904,6 +929,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   goaltime(input$goalT, data_to_plot),
                   top10percentmean(data_to_plot),
                   bottom20percentmean(data_to_plot)
@@ -934,6 +960,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   pasttime(input$pastT, data_to_plot),
                   top10percentmean(data_to_plot),
                   bottom20percentmean(data_to_plot)
@@ -961,6 +988,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   pasttime(input$pastT, data_to_plot),
                   goaltime(input$goalT, data_to_plot),
                   top10percentmean(data_to_plot),
@@ -994,6 +1022,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   top10percentmean(data_to_plot),
                   bottom20percentmean(data_to_plot)
                 )
@@ -1020,6 +1049,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   goaltime(input$goalT, data_to_plot),
                   top10percentmean(data_to_plot),
                   bottom20percentmean(data_to_plot)
@@ -1049,6 +1079,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   pasttime(input$pastT, data_to_plot),
                   top10percentmean(data_to_plot),
                   bottom20percentmean(data_to_plot)
@@ -1076,6 +1107,7 @@ server <- function(input, output) {
               
               data_to_plot <-
                 rbind(
+                  globalaverage(data_to_plot),
                   pasttime(input$pastT, data_to_plot),
                   goaltime(input$goalT, data_to_plot),
                   top10percentmean(data_to_plot),
