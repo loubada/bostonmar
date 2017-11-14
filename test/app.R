@@ -54,7 +54,8 @@ ui <- fluidPage(
       selectInput(
         inputId = "Country",
         label = h5("Country :"),
-        choices = c("-", unique(levels(data_all$Country))),
+        #List of countries according to the most represented nationalites
+        choices = c("-", as.character(arrange(summarise(group_by(data_all, Country), number=n()), desc(number))$Country)),
         selected = "-"
       ),
       
